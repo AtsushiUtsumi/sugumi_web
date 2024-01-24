@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プレゼンテーション層作成</title>
+</head>
+
+<body>
+    <h3>プレゼンテーション層作成</h3>
+    <p>HTMLのページが各テンプレートエンジンの種類に依存するのはなんか嫌やな...JSONでのやり取りで固定するか</p>
+    <form action="{{ url_for('presentation') }}" method="POST" novalidate="novalidate">
+        <input type="submit" value="クラスファイル生成" /><input type="submit" value="仕様書生成" /><input type="submit" value="E2Eテストコード生成" /><br>
+        <input style="width:70%;" id="rows" type="text" name="rows" value="{{ rows }}" />
+    </form>
+
+    <div id="mytable"></div>
+    <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css">
+    <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css">
+    <script>
+        var changed = function (instance, cell, x, y, value) {
+            document.getElementById('rows').value = JSON.stringify(myTable.getData());
+        }
+        const myTable = jspreadsheet(document.getElementById('mytable'), {
+            data: JSON.parse(document.getElementById('rows').value),
+            onchange: changed,
+            columns: [
+                { type: 'text', title: '画面名', width: 300 },
+                { type: 'text', title: 'URL(基本GET)', width: 300 },
+                { type: 'text', title: 'クラス名', width: 300 },
+                { type: 'text', title: '機能:メソッド(ボタン毎かコントローラメソッド毎にするか)', width: 1000 },
+            ]
+        });
+    </script>
+</body>
+
+</html>

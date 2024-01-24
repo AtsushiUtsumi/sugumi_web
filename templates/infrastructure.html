@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インフラストラクチャ層作成</title>
+</head>
+
+<body>
+    <h3>インフラストラクチャ層作成</h3>
+    <form action="{{ url_for('infrastructure') }}" method="POST" novalidate="novalidate">
+        <input type="submit" value="ソースコード生成" /><select><option value="java">Java</option><option value="py">Python</option></select><br>
+        <input type="submit" value="ER図生成" /><br>
+        <input type="submit" value="エクスポート" />
+        <select>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+        </select><br>
+        <input style="width:70%;" id="rows" type="text" name="rows" value="{{ rows }}" />
+    </form>
+
+    <div id="mytable"></div>
+    <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css">
+    <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css">
+    <script>
+        var changed = function (instance, cell, x, y, value) {
+            document.getElementById('rows').value = JSON.stringify(myTable.getData());
+        }
+        const myTable = jspreadsheet(document.getElementById('mytable'), {
+            data: JSON.parse(document.getElementById('rows').value),
+            onchange: changed,
+            columns: [
+                { type: 'text', title: '論理名', width: 200 },
+                { type: 'text', title: '物理名(スネークケース)', width: 200 },
+                { type: 'text', title: 'エンティティクラス名', width: 200 },
+                { type: 'text', title: '言語側型名:CREATE文の後の部分', width: 1000 },
+            ]
+        });
+    </script>
+</body>
+
+</html>

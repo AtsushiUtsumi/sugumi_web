@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/image/favicon.ico">
+    <title>SUGUMI-WEB メニュー</title>
+</head>
+
+<body>
+    <h3>SUGUMI-WEB</h3>
+    <p>
+        SUGUMI-WEBへようこそ!
+    </p>
+    <br>
+    <p>
+        WEB化するメリットは皆が使えること。逆に言えば皆が使える環境を作れないのなら、WEB化は不要。<br>
+        ただGUIのほうがビジュアル面で受けが良いとも思う。
+    </p>
+    <table>
+        <tr>
+            <td>URL</td>
+            <td>コントローラー</td>
+            <td>そこから呼ばれるメインのサービス</td>
+        </tr>
+        <tr>
+            <td><a href="{{ url_for('presentation') }}" target="_self" rel="noopener noreferrer">プレゼンテーション層</a></td>
+        </tr>
+        <tr>
+            <td><a href="{{ url_for('application') }}" target="_self" rel="noopener noreferrer">アプリケーション層</a></td>
+        </tr>
+        <tr>
+            <td><a href="{{ url_for('infrastructure') }}" target="_self" rel="noopener noreferrer">インフラストラクチャ層</a></td>
+        </tr>
+        <tr>
+            <td><a href="/screen" target="_blank" rel="noopener noreferrer">画面生成を新しいタブで開く</a></td>
+        </tr>
+    </table>
+</body>
+
+</html>

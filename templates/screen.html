@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/image/favicon.ico">
+    <title>SUGUMI-WEB メニュー</title>
+</head>
+<body>
+    <h3>画面生成</h3>
+    <a href="{{ url_for('menu') }}" target="_self" rel="noopener noreferrer">MENU</a>
+    <p>
+        html,Controller,Serviceを生成します<br>
+        メッセージ:{{title}}<br>
+    </p>
+    <br>
+    <form action="{{ url_for('screen') }}" method="post">
+        {{ form.csrf_token }}
+        <table>
+            <tr><td>{{ form.user_name }}</td></tr>
+            <tr><td>{{ form.email }}</td></tr>
+        </table>
+		<input type="submit" value="送信">
+    </form>
+</body>
+</html>
