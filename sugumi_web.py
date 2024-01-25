@@ -19,6 +19,8 @@ def presentation():
             print(i[0])
             file_name = f'{i[2]}.html'
             createPresentation(file_name, json.loads(rows))
+            createPresentation(f'{i[2]}Form.java', i[3])
+            createPresentation(f'{i[2]}Controller.java', i[3])
         return render_template('presentation.html', rows=rows)
     return render_template('presentation.html', rows="""[
                 ['ログイン', '/login', 'Login',''],
@@ -38,12 +40,19 @@ def presentation():
 def  application():
     if request.method == "POST":
         rows = request.form["rows"]
-        print(rows)
+        import json
+        from sugumi import createApplication
+        print(json.loads(rows))
+        for i in json.loads(rows):
+            print(i[0])
+            file_name = f'{i[1]}Service.java'
+            createApplication(file_name, json.loads(rows))
         return render_template('application.html', rows=rows)
     return render_template('application.html', rows="""[
-                [' application', ' application', ' application', 'Integer:id INT(3), String:type_name VARCHAR(50), String:table_name VARCHAR(50)'],
-                ['presentation', 'presentation', 'Presentation', 'Integer:id INT(3), String:screen_name VARCHAR(50)'],
-                ['application', 'application', 'Application', 'Integer:id INT(3), String:function_name VARCHAR(50)']
+                ['ユーザー登録', 'User', 'register', '1'],
+                ['ユーザー検索', 'User', 'search', '2'],
+                ['ユーザー更新', 'User', 'update', '3'],
+                ['ユーザー削除', 'User', 'delete', '4']
             ]""".replace("'", "\""))
 
 @app.route('/infrastructure', methods=["GET", "POST"])
@@ -51,6 +60,12 @@ def infrastructure():
     if request.method == "POST":
         rows = request.form["rows"]
         print(rows)
+        import json
+        from sugumi import createInfrastructure
+        for i in json.loads(rows):
+            print(i[0])
+            file_name = f'{i[1]}Repository.java'
+            createInfrastructure(file_name, json.loads(rows))
         return render_template('infrastructure.html', rows=rows)
     return render_template('infrastructure.html', rows="""[
                 ['infrastructure', 'infrastructure', 'Infrastructure', 'Integer:id INT(3), String:type_name VARCHAR(50), String:table_name VARCHAR(50)'],

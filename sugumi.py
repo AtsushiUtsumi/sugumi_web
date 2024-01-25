@@ -6,3 +6,17 @@ def createPresentation(file_name, content):
     for row in content:
         file.write(str(row) + '<br>\n')
     file.close()
+
+def createApplication(file_name, content):
+    print(file_name + 'を作成')
+    file = open(f'output/{file_name}', 'w')
+    for row in content:
+        file.write(str(row) + '<br>\n')
+    file.close()
+
+def createInfrastructure(file_name, content):
+    print(file_name + 'を作成')
+    file = open(f'output/{file_name}', 'w')
+    for row in content:
+        file.write(str(row) + '<br>\n')
+    file.close()
