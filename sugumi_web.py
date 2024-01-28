@@ -1,3 +1,6 @@
+# このモジュールはsugumiの中ではプレゼンテーション層にあたる。
+# メソッド数が少ないので1モジュールで済ませている
+
 # モジュールを追加
 from flask import Flask, render_template, request
 
@@ -13,7 +16,7 @@ def presentation():
     if request.method == "POST":
         rows = request.form["rows"]
         import json
-        from sugumi import createPresentation
+        from sugumi_service import createPresentation
         print(json.loads(rows))
         for i in json.loads(rows):
             print(i[0])
@@ -41,7 +44,7 @@ def  application():
     if request.method == "POST":
         rows = request.form["rows"]
         import json
-        from sugumi import createApplication
+        from sugumi_service import createApplication
         print(json.loads(rows))
         for i in json.loads(rows):
             print(i[0])
@@ -61,7 +64,7 @@ def infrastructure():
         rows = request.form["rows"]
         print(rows)
         import json
-        from sugumi import createInfrastructure
+        from sugumi_service import createInfrastructure
         for i in json.loads(rows):
             print(i[0])
             file_name = f'{i[1]}Repository.java'
