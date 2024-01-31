@@ -39,7 +39,7 @@ class Column:
 class Table:
     description: str
     name: str
-    column_list: list[Column] = []
+    column_list: []
 
 def createInfrastructure(file_name, content):
     print(file_name + 'を作成')
@@ -49,5 +49,24 @@ def createInfrastructure(file_name, content):
     file.close()
     from xuanzhuan.layer.application.java import ApplicationJava
     app = ApplicationJava('fuga', Path('E:\Desktop\main'), Path('E:\Desktop\test'))
-    Table('ほげ','hoge',Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String'))
-    tmp = {'package': 'hoge', }
+    #Table('ほげ','hoge',Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String'))
+    tmp = {'package': 'hoge'}
+
+
+create_table_query = '''
+CREATE TABLE IF NOT EXISTS sample_table (
+    screen_name VARCHAR(255),
+    url VARCHAR(255),
+    class_name VARCHAR(255),
+    function VARCHAR(255)
+)
+'''
+
+def build_create_table_query(table: Table):
+    tmp = []
+    from sugumi_infrastructure import execute
+    for i in table.column_list:
+        tmp.append(i.name + ' ' + i.datatype)
+    execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
+
+build_create_table_query(Table('売上伝票', '"table_info"', [Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String')]))
