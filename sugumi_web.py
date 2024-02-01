@@ -11,6 +11,27 @@ app.config['SECRET_KEY'] = 'secret_key'# CSRFに必要かも
 def menu():
     return render_template('menu.html')
 
+@app.route('/env', methods=["GET", "POST"])
+def env():
+    if request.method == "POST":
+        rows = request.form["rows"]
+        print(rows)
+        import json
+        from sugumi_service import createInfrastructure
+        for i in json.loads(rows):
+            print(i[0])
+            file_name = f'{i[1]}Repository.java'
+            createInfrastructure(file_name, json.loads(rows))
+        return render_template('env.html', rows=rows)
+    return render_template('env.html', rows="""[
+                ['ENV_DEV', '1', '', ''],
+                ['ENV_TEST', '', '1', ''],
+                ['ENV_PROD', '', '', '1'],
+                ['DB_HOST', 'sqliteUser', 'testUser', 'prodUser'],
+                ['DB_USER', 'devUser', 'testUser', 'prodUser'],
+                ['DB_PASSWORD', 'devPass', 'testPass', 'prodPass']
+            ]""".replace("'", "\""))
+
 @app.route('/presentation', methods=["GET", "POST"])
 def presentation():
     if request.method == "POST":
