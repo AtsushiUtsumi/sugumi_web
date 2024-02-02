@@ -64,6 +64,8 @@ def presentation():
 def  application():
     if request.method == "POST":
         rows = request.form["rows"]
+        print('//////////////////////////////////ソースディレクトリ:' + request.form["src_root_path"])
+        print('//////////////////////////////////テストディレクトリ:' + request.form["test_root_path"])
         import json
         from sugumi_service import createApplication
         print(json.loads(rows))
@@ -71,8 +73,13 @@ def  application():
             print(i[0])
             file_name = f'{i[1]}Service.java'
             createApplication(file_name, json.loads(rows))
-        return render_template('application.html', rows=rows)
-    return render_template('application.html', rows="""[
+        print(request.form)
+        return render_template('application.html',form=request.form, rows=rows)
+    form = {
+        'src_root_path': 'ほげ',
+        'test_root_path': 'ふが'
+    }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
+    return render_template('application.html', form = form, rows="""[
                 ['ユーザー登録', 'User', 'register', '1'],
                 ['ユーザー検索', 'User', 'search', '2'],
                 ['ユーザー更新', 'User', 'update', '3'],
