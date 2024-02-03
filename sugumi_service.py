@@ -48,11 +48,19 @@ def createInfrastructure(file_name, content):
         file.write(str(row) + '<br>\n')
     file.close()
     from xuanzhuan.layer.application.java import ApplicationJava
-    app = ApplicationJava('fuga', Path('E:\\Desktop\\main'), Path('E:\\Desktop\\test'))
-    app.add_use_case()
-    #Table('ほげ','hoge',Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String'))
-    tmp = {'package': 'hoge'}
-
+    project_name = 'dao'
+    application_root = Path(f'E:\\Desktop\\{project_name}\\app\\src\\main\\java\\dao')
+    application_root_test = Path(f'E:\\Desktop\\{project_name}\\app\\src\\test\\java\\dao')
+    app = ApplicationJava(project_name, application_root, application_root_test)
+    from xuanzhuan.layer.application.use_case import UseCase
+    use_case = UseCase('ユーザー登録機能', 'registerUser', [], [], True)# これだと1機能につき1クラスしか作成できないがいいのか
+    app.add_use_case(use_case)
+    use_case = UseCase('ユーザー検索機能', 'searchUser', [], [], True)# これだと1機能につき1クラスしか作成できないがいいのか
+    app.add_use_case(use_case)
+    use_case = UseCase('ユーザー更新機能', 'updateUser', [], [], True)# これだと1機能につき1クラスしか作成できないがいいのか
+    app.add_use_case(use_case)
+    use_case = UseCase('ユーザー削除機能', 'deleteUser', [], [], True)# これだと1機能につき1クラスしか作成できないがいいのか
+    app.add_use_case(use_case)
 
 create_table_query = '''
 CREATE TABLE IF NOT EXISTS sample_table (
