@@ -103,6 +103,9 @@ class ProjectInfoService:
         injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
         self.projectInfoRepository = injector.get(ProjectInfoRepository)# この代入はシングルトン
         print('DI完了')
+    def create_table(self):
+        self.projectInfoRepository.create_table()
+        return
     def insert(self, entity: ProjectInfo):
         self.projectInfoRepository.insert(entity)
         return

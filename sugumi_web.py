@@ -3,6 +3,7 @@
 
 # モジュールを追加
 from flask import Flask, render_template, request
+from sugumi_domain import ProjectInfo
 
 from sugumi_service import ProjectInfoService
 
@@ -15,6 +16,8 @@ def menu():
     print(projectInfoService)
     rs = projectInfoService.find_all()
     print(rs[0].id)
+    projectInfoService.create_table()
+    projectInfoService.insert(ProjectInfo(1234))
     return render_template('menu.html')
 
 @app.route('/env', methods=["GET", "POST"])

@@ -16,12 +16,15 @@ class ProjectInfo:
         self.id = id
         self.project_name = id
         self.output_path = id
-        self.group_id = id
+        self.group_id = id# Java特有だがここでいいのか
         self.framework = id
         self.language = id
         pass
 
 class ProjectInfoRepository(metaclass=ABCMeta):
+    @abstractmethod
+    def create_table(self):
+        return
     @abstractmethod
     def insert(self, entity: ProjectInfo):
         return

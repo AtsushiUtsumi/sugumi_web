@@ -31,6 +31,8 @@ execute(create_table_query)
 # Repository実装
 from sugumi_domain import ProjectInfo, ProjectInfoRepository
 class SqliteProjectInfoRepository(ProjectInfoRepository):
+    def create_table(self):
+        return
     def insert(self, entity: ProjectInfo):
         return
     def updete(self, entity: ProjectInfo):
@@ -49,7 +51,25 @@ class SqliteProjectInfoRepository(ProjectInfoRepository):
         return rs
 
 class PostgresqlProjectInfoRepository(ProjectInfoRepository):
+    def create_table(self):
+        create_table_query = '''
+CREATE TABLE IF NOT EXISTS project_info (
+    id INT,
+    project_name VARCHAR(255),
+    output_path  VARCHAR(255),
+    group_id VARCHAR(255),
+    framework VARCHAR(255),
+    language VARCHAR(20)
+)
+'''
+        print(create_table_query)
+        execute(create_table_query)
+        return
     def insert(self, entity: ProjectInfo):
+        # TODO: 今はIDのみ登録している
+        insert_table_query = f'INSERT INTO project_info (id) VALUES ({entity.id})'
+        print(insert_table_query)
+        execute(insert_table_query)
         return
     def updete(self, entity: ProjectInfo):
         return
