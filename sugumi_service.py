@@ -4,6 +4,11 @@
 # 仮の1モジュールのsugumiあとで本物のsugumiかxuanzhuanに交換する
 from pathlib import Path
 
+from injector import Injector, Module
+
+from sugumi_domain import ProjectInfo, ProjectInfoRepository
+from sugumi_infrastructure import PostgresqlProjectInfoRepository, SqliteProjectInfoRepository
+
 def createPresentation(file_name, content):
     print(file_name + 'を作成')
     file = open(f'output/{file_name}', 'w')
@@ -79,3 +84,35 @@ def build_create_table_query(table: Table):
     execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
 
 build_create_table_query(Table('売上伝票', '"table_info"', [Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String')]))
+
+
+
+
+# RepositoryにどっちをDIするかを選択(TODO:あとで設定に移す)
+class SqliteDiModule(Module):
+    def configure(self, binder):
+        binder.bind(ProjectInfoRepository, to=SqliteProjectInfoRepository)
+
+class PostgresqlDiModule(Module):
+    def configure(self, binder):
+        binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
+
+class ProjectInfoService:
+    def __init__(self) -> None:
+        # injector = Injector([SqliteDiModule()])# 「Sqlite」使いたければこっち
+        injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
+        self.projectInfoRepository = injector.get(ProjectInfoRepository)# この代入はシングルトン
+        print('DI完了')
+    def insert(self, entity: ProjectInfo):
+        self.projectInfoRepository.insert(entity)
+        return
+    def updete(self, entity: ProjectInfo):
+        self.projectInfoRepository.insert(entity)
+        return
+    def delete(self, id: int):
+        self.projectInfoRepository.delete(id)
+        return
+    def find(self, id: int) -> ProjectInfo:
+        return self.projectInfoRepository.find(id)
+    def find_all(self) -> list[ProjectInfo]:
+        return self.projectInfoRepository.find_all()

@@ -4,11 +4,17 @@
 # モジュールを追加
 from flask import Flask, render_template, request
 
+from sugumi_service import ProjectInfoService
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'# CSRFに必要かも
 
 @app.route('/')
 def menu():
+    projectInfoService = ProjectInfoService()
+    print(projectInfoService)
+    rs = projectInfoService.find_all()
+    print(rs[0].id)
     return render_template('menu.html')
 
 @app.route('/env', methods=["GET", "POST"])
