@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS sample_table (
 
 def build_create_table_query(table: Table):
     tmp = []
-    from sugumi_infrastructure import execute
+    from sugumi_infrastructure import postgresql_execute
     for i in table.column_list:
         tmp.append(i.name + ' ' + i.datatype)
-    execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
+    postgresql_execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
 
 build_create_table_query(Table('売上伝票', '"table_info"', [Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String')]))
 
@@ -99,8 +99,8 @@ class PostgresqlDiModule(Module):
 
 class ProjectInfoService:
     def __init__(self) -> None:
-        # injector = Injector([SqliteDiModule()])# 「Sqlite」使いたければこっち
-        injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
+        injector = Injector([SqliteDiModule()])# 「Sqlite」使いたければこっち
+        # injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
         self.projectInfoRepository = injector.get(ProjectInfoRepository)# この代入はシングルトン
         print('DI完了')
     def create_table(self):

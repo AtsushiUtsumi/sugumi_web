@@ -3,13 +3,21 @@
 
 # 事前に「pg_config.exe」(Postgresqlをインストールしたフォルダ内の「bin」の中にある)のPATHを通しておくこと
 
-# 帰ったらこれをメソッド化すること
+import sqlite3
+
+def sqlite_execute(query: str):
+    con = sqlite3.connect("sugumi.db")
+    cur = con.cursor()
+    CREATE_TABLE = "CREATE TABLE IF NOT EXISTS akari (t1 TEXT, t2 NUMERIC, t3 INTEGER, t4 REAL, t5 BLOB);"
+    SELECT_NAME_FROM_MASTER = "SELECT name FROM sqlite_master;"
+    cur.execute(CREATE_TABLE)
+    res = cur.execute(SELECT_NAME_FROM_MASTER)
 
 import psycopg2
 
 # PostgreSQLに接続
 
-def execute(query: str):
+def postgresql_execute(query: str):
     connection = psycopg2.connect('postgresql://postgres:password@localhost:5432/sugumi')
     cursor = connection.cursor()
     cursor.execute(query)
@@ -26,12 +34,13 @@ CREATE TABLE IF NOT EXISTS sample_table (
 )
 '''
 
-execute(create_table_query)
+postgresql_execute(create_table_query)
 
 # Repository実装
 from sugumi_domain import ProjectInfo, ProjectInfoRepository
 class SqliteProjectInfoRepository(ProjectInfoRepository):
     def create_table(self):
+        sqlite_execute(create_table_query)
         return
     def insert(self, entity: ProjectInfo):
         return
@@ -63,13 +72,13 @@ CREATE TABLE IF NOT EXISTS project_info (
 )
 '''
         print(create_table_query)
-        execute(create_table_query)
+        postgresql_execute(create_table_query)
         return
     def insert(self, entity: ProjectInfo):
         # TODO: 今はIDのみ登録している
         insert_table_query = f'INSERT INTO project_info (id) VALUES ({entity.id})'
         print(insert_table_query)
-        execute(insert_table_query)
+        postgresql_execute(insert_table_query)
         return
     def updete(self, entity: ProjectInfo):
         return
