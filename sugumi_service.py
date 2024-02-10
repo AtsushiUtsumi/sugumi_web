@@ -44,7 +44,7 @@ class Column:
 class Table:
     description: str
     name: str
-    column_list: []
+    column_list: list[Column]
 
 def createInfrastructure(file_name, content):
     print(file_name + 'を作成')
