@@ -2,6 +2,8 @@
 # メソッド数が少ないので1モジュールで済ませている
 
 # モジュールを追加
+import os
+from pathlib import Path
 from flask import Flask, render_template, request
 from sugumi_domain import ProjectInfo
 
@@ -69,24 +71,32 @@ def presentation():
                 ['インフラストラクチャ層生成', '/infrastructure', 'Infrastructure','クラスファイル作成:createRepository, ER図作成:createEr']
             ]""".replace("'", "\""))
 
+from dotenv import load_dotenv
+load_dotenv()
+
 @app.route('/application', methods=["GET", "POST"])
 def  application():
     if request.method == "POST":
         rows = request.form["rows"]
-        print('//////////////////////////////////ソースディレクトリ:' + request.form["src_root_path"])
-        print('//////////////////////////////////テストディレクトリ:' + request.form["test_root_path"])
+        src_root_path = Path(request.form["src_root_path"])
+        test_root_path = Path(request.form["test_root_path"])
         import json
-        from sugumi_service import createApplication
+        from sugumi_service import create_application
+        create_application(src_root_path=src_root_path, test_root_path=test_root_path)
         print(json.loads(rows))
+
+        # 
         for i in json.loads(rows):
             print(i[0])
             file_name = f'{i[1]}Service.java'
-            createApplication(file_name, json.loads(rows))
+            #create_application(file_name, json.loads(rows))
+
+        # ページを返却
         print(request.form)
         return render_template('application.html',form=request.form, rows=rows)
     form = {
-        'src_root_path': 'ほげ',
-        'test_root_path': 'ふが'
+        'src_root_path': os.environ['SRC_ROOT_PATH'],
+        'test_root_path': os.environ['TEST_ROOT_PATH']
     }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
     return render_template('application.html', form = form, rows="""[
                 ['ユーザー登録', 'User', 'register', '1'],

@@ -2,6 +2,7 @@
 # メソッド数が少ないので1モジュールで済ませている
 
 # 仮の1モジュールのsugumiあとで本物のsugumiかxuanzhuanに交換する
+import os
 from pathlib import Path
 
 from injector import Injector, Module
@@ -16,14 +17,20 @@ def createPresentation(file_name, content):
         file.write(str(row) + '<br>\n')
     file.close()
 
-def createApplication(file_name, content):
+def create_application_file(file_name, content):# このメソッドはファイル単位で作るのか?
     print(file_name + 'を作成')
-    file = open(f'output/{file_name}', 'w')
+    file = open(f'output/{file_name}', 'w', encoding='UTF8')
     for row in content:
         file.write(str(row) + '<br>\n')
     file.close()
+    return
+
+from dotenv import load_dotenv
+load_dotenv()
+
+def create_application(src_root_path: Path, test_root_path: Path):
     from xuanzhuan.layer.application.java import ApplicationJava
-    app = ApplicationJava('fuga', Path('E:\\Desktop\\main'), Path('E:\\Desktop\\test'))
+    app = ApplicationJava(os.environ['PACKAGE_NAME'], src_root_path, test_root_path)
     from xuanzhuan.layer.application.use_case import UseCase
     tmp = UseCase('ユーザー登録処理', 'registerUser')
     app.add_use_case(tmp)
