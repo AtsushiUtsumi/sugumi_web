@@ -10,8 +10,8 @@
 <body>
     <h3>アプリケーション層作成</h3>
     <form action="{{ url_for('application') }}" method="POST" novalidate="novalidate">
-        ソースルート<input type="text" name="src_root_path" value="{{ form.src_root_path }}" /><br>
-        テストルート<input type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
+        ソースルート<input style="width:30%;" type="text" name="src_root_path" value="{{ form.src_root_path }}" /><br>
+        テストルート<input style="width:30%;" type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
         <input type="submit" value="ソースコード生成" /><select><option value="java">Java</option><option value="py">Python</option></select><br>
         <input type="submit" value="ER図生成" /><br>
         <input type="submit" value="エクスポート" />
