@@ -38,5 +38,5 @@ class ProjectInfoRepository(metaclass=ABCMeta):
     def find(self, id: int) -> ProjectInfo:
         return
     @abstractmethod
-    def find_all(self) -> [ProjectInfo]:
+    def find_all(self) -> list[ProjectInfo]:
         return
