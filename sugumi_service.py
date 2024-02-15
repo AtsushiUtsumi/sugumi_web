@@ -5,9 +5,9 @@
 import os
 from pathlib import Path
 
-from injector import Injector, Module
+from injector import Injector, Module, inject
 
-from sugumi_domain import ProjectInfo, ProjectInfoRepository
+from sugumi_domain import ClassInfoRepository, ProjectInfo, ProjectInfoRepository
 from sugumi_infrastructure import PostgresqlProjectInfoRepository, SqliteProjectInfoRepository
 
 def createPresentation(file_name, content):
@@ -28,14 +28,12 @@ def create_application_file(file_name, content):# このメソッドはファイ
 from dotenv import load_dotenv
 load_dotenv()
 
-def create_application(src_root_path: Path, test_root_path: Path):
+from xuanzhuan.layer.application.use_case import UseCase
+def create_application(src_root_path: Path, test_root_path: Path, use_case_list: list[UseCase]):
     from xuanzhuan.layer.application.java import ApplicationJava
     app = ApplicationJava(os.environ['PACKAGE_NAME'], src_root_path, test_root_path)
-    from xuanzhuan.layer.application.use_case import UseCase
-    tmp = UseCase('ユーザー登録処理', 'registerUser')
-    app.add_use_case(tmp)
-    tmp = UseCase('ユーザー更新処理', 'updateUser')
-    app.add_use_case(tmp)
+    for use_case in use_case_list:
+        app.add_use_case(use_case=use_case)
 
 from dataclasses import dataclass
 @dataclass
@@ -88,9 +86,9 @@ def build_create_table_query(table: Table):
     from sugumi_infrastructure import postgresql_execute
     for i in table.column_list:
         tmp.append(i.name + ' ' + i.datatype)
-    postgresql_execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
+    #postgresql_execute('CREATE TABLE IF NOT EXISTS ' + table.name + '(' + ', '.join(tmp) + ')')
 
-build_create_table_query(Table('売上伝票', '"table_info"', [Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String')]))
+#build_create_table_query(Table('売上伝票', '"table_info"', [Column('ユーザー名', 'user_name', 'VARCHAR(20)', 'UNIQUE', 'userName', 'String')]))
 
 
 
@@ -105,7 +103,10 @@ class PostgresqlDiModule(Module):
         binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
 
 class ProjectInfoService:
-    def __init__(self) -> None:
+    @inject
+    def __init__(self, repository: ProjectInfoRepository) -> None:
+        self.repository = repository
+        self.repository.create_table()# ここで何がインジェクションされているか
         injector = Injector([SqliteDiModule()])# 「Sqlite」使いたければこっち
         # injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
         self.projectInfoRepository = injector.get(ProjectInfoRepository)# この代入はシングルトン
@@ -126,3 +127,13 @@ class ProjectInfoService:
         return self.projectInfoRepository.find(id)
     def find_all(self) -> list[ProjectInfo]:
         return self.projectInfoRepository.find_all()
+
+class ClassInfoService:
+    @inject
+    def __init__(self, repository: ClassInfoRepository) -> None:
+        self.repository = repository
+        self.repository.create_table()# ここで何がインジェクションされているか
+        injector = Injector([SqliteDiModule()])# 「Sqlite」使いたければこっち
+        # injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
+        self.projectInfoRepository = injector.get(ClassInfoRepository)# この代入はシングルトン
+        print('DI完了')

@@ -5,16 +5,29 @@
 import os
 from pathlib import Path
 from flask import Flask, render_template, request
-from sugumi_domain import ProjectInfo
+from injector import Injector, Module
+from sugumi_domain import ProjectInfo, ProjectInfoRepository
+from sugumi_infrastructure import PostgresqlProjectInfoRepository, SqliteProjectInfoRepository
 
 from sugumi_service import ProjectInfoService
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'# CSRFに必要かも
 
+
+class SqliteDiModule(Module):
+    def configure(self, binder):
+        binder.bind(ProjectInfoRepository, to=SqliteProjectInfoRepository)
+
+class PostgresqlDiModule(Module):
+    def configure(self, binder):
+        binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
+
+injector = Injector([SqliteDiModule()])
+
 @app.route('/')
 def menu():
-    projectInfoService = ProjectInfoService()
+    projectInfoService = injector.get(ProjectInfoRepository)
     print(projectInfoService)
     rs = projectInfoService.find_all()
     print(rs[0].id)
@@ -81,15 +94,11 @@ def  application():
         src_root_path = Path(request.form["src_root_path"])
         test_root_path = Path(request.form["test_root_path"])
         import json
-        from sugumi_service import create_application
-        create_application(src_root_path=src_root_path, test_root_path=test_root_path)
         print(json.loads(rows))
 
-        # 
-        for i in json.loads(rows):
-            print(i[0])
-            file_name = f'{i[1]}Service.java'
-            #create_application(file_name, json.loads(rows))
+        # 受け取った内容を元にアプリケーション層作成
+        from sugumi_service import create_application
+        create_application(src_root_path=src_root_path, test_root_path=test_root_path)
 
         # ページを返却
         print(request.form)
@@ -99,10 +108,9 @@ def  application():
         'test_root_path': os.environ['TEST_ROOT_PATH']
     }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
     return render_template('application.html', form = form, rows="""[
-                ['ユーザー登録', 'User', 'register', '1'],
-                ['ユーザー検索', 'User', 'search', '2'],
-                ['ユーザー更新', 'User', 'update', '3'],
-                ['ユーザー削除', 'User', 'delete', '4']
+                ['機能登録', 'User', 'register', '1'],
+                ['機能更新', 'User', 'update', '2'],
+                ['機能削除', 'User', 'delete', '3']
             ]""".replace("'", "\""))
 
 @app.route('/infrastructure', methods=["GET", "POST"])

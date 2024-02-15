@@ -40,3 +40,35 @@ class ProjectInfoRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_all(self) -> list[ProjectInfo]:
         return
+    
+
+
+class ClassInfo:
+    def __init__(self, id) -> None:
+        self.id = id
+        self.Class_name = id
+        self.output_path = id
+        self.group_id = id# Java特有だがここでいいのか
+        self.framework = id
+        self.language = id
+        pass
+
+class ClassInfoRepository(metaclass=ABCMeta):
+    @abstractmethod
+    def create_table(self):
+        return
+    @abstractmethod
+    def insert(self, entity: ClassInfo):
+        return
+    @abstractmethod
+    def updete(self, entity: ClassInfo):
+        return
+    @abstractmethod
+    def delete(self, id: int):
+        return
+    @abstractmethod
+    def find(self, id: int) -> ClassInfo:
+        return
+    @abstractmethod
+    def find_all(self) -> list[ClassInfo]:
+        return
