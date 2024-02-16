@@ -11,7 +11,13 @@
     <h3>プレゼンテーション層作成</h3>
     <p>HTMLのページが各テンプレートエンジンの種類に依存するのはなんか嫌やな...JSONでのやり取りで固定するか</p>
     <form action="{{ url_for('presentation') }}" method="POST" novalidate="novalidate">
-        <input type="submit" value="クラスファイル生成" /><input type="submit" value="仕様書生成" /><input type="submit" value="E2Eテストコード生成" /><br>
+        HTMLルート<input style="width:30%;" type="text" name="src_root_path" value="{{ form.src_root_path }}" /><br>
+        Controllerルート<input style="width:30%;" type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
+        <input type="submit" value="フレームワーク選択" />
+        <select>
+            <option value="spring">Spring</option>
+            <option value="flask">Flask</option>
+        </select><br>
         <input style="width:70%;" id="rows" type="text" name="rows" value="{{ rows }}" />
     </form>
 
@@ -28,10 +34,10 @@
             data: JSON.parse(document.getElementById('rows').value),
             onchange: changed,
             columns: [
-                { type: 'text', title: '画面名', width: 300 },
-                { type: 'text', title: 'URL(基本GET)', width: 300 },
-                { type: 'text', title: 'クラス名(Form,Controller)', width: 300 },
-                { type: 'text', title: '機能:メソッド(ボタン毎かコントローラメソッド毎にするか)', width: 1000 },
+                { type: 'text', title: '画面名', width: 300 , align: 'left'},
+                { type: 'text', title: 'URL(基本GET)', width: 300 , align: 'left'},
+                { type: 'text', title: 'クラス名(Form,Controller)', width: 300 , align: 'left'},
+                { type: 'text', title: '機能:メソッド(ボタン毎かコントローラメソッド毎にするか)', width: 1000 , align: 'left'},
             ]
         });
     </script>

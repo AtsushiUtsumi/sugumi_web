@@ -6,28 +6,31 @@ import os
 from pathlib import Path
 from flask import Flask, render_template, request
 from injector import Injector, Module
-from sugumi_domain import ProjectInfo, ProjectInfoRepository
-from sugumi_infrastructure import PostgresqlProjectInfoRepository, SqliteProjectInfoRepository
+from sugumi_domain import PresentationInfoRepository, ProjectInfo, ProjectInfoRepository
+from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository
 
 from sugumi_service import ProjectInfoService
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'# CSRFに必要かも
 
-
+# 以下別モジュールに移すか
 class SqliteDiModule(Module):
     def configure(self, binder):
         binder.bind(ProjectInfoRepository, to=SqliteProjectInfoRepository)
+        binder.bind(PresentationInfoRepository, to=SqlitePresentationInfoRepository)
 
 class PostgresqlDiModule(Module):
     def configure(self, binder):
         binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
+        binder.bind(PresentationInfoRepository, to=PostgresqlPresentationInfoRepository)
 
 injector = Injector([SqliteDiModule()])
+# injector = Injector([PostgresqlDiModule()])
 
 @app.route('/')
 def menu():
-    projectInfoService = injector.get(ProjectInfoRepository)
+    projectInfoService = injector.get(ProjectInfoRepository)# TODO: ここ名前を変更が必要では?
     print(projectInfoService)
     rs = projectInfoService.find_all()
     print(rs[0].id)
@@ -66,11 +69,18 @@ def presentation():
         for i in json.loads(rows):
             print(i[0])
             file_name = f'{i[2]}.html'
-            createPresentation(file_name, json.loads(rows))
-            createPresentation(f'{i[2]}Form.java', i[3])
-            createPresentation(f'{i[2]}Controller.java', i[3])
-        return render_template('presentation.html', rows=rows)
-    return render_template('presentation.html', rows="""[
+            #createPresentation(file_name, json.loads(rows))
+            #createPresentation(f'{i[2]}Form.java', i[3])
+            #createPresentation(f'{i[2]}Controller.java', i[3])
+        # 今日はここでテーブル作成したら寝る
+        repository = injector.get(PresentationInfoRepository)
+        repository.create_table()
+        return render_template('presentation.html', form = request.form, rows = rows)
+    form = {
+        'src_root_path': os.environ['SRC_ROOT_PATH'],
+        'test_root_path': os.environ['TEST_ROOT_PATH']
+    }
+    return render_template('presentation.html', form = form, rows="""[
                 ['ログイン', '/login', 'Login',''],
                 ['メニュー', '/menu', 'Menu',''],
                 ['ユーザー一覧', '/user/list', 'UserList',''],

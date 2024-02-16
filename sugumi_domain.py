@@ -46,7 +46,7 @@ class ProjectInfoRepository(metaclass=ABCMeta):
 class ClassInfo:
     def __init__(self, id) -> None:
         self.id = id
-        self.Class_name = id
+        self.class_name = id
         self.output_path = id
         self.group_id = id# Java特有だがここでいいのか
         self.framework = id
@@ -71,4 +71,31 @@ class ClassInfoRepository(metaclass=ABCMeta):
         return
     @abstractmethod
     def find_all(self) -> list[ClassInfo]:
+        return
+    
+
+
+
+class PresentationInfo:
+    def __init__(self, screen_name, url, class_name, action) -> None:
+        self.screen_name: str = screen_name
+        self.url: str = url
+        self.class_name: str = class_name
+        self.action: str = action
+
+class PresentationInfoRepository(metaclass=ABCMeta):# 抽象クラスにDBを連想させる命名をすべきではないのでは?create_tableメソッドは削除、insertメソッドは名前を変更したい
+    @abstractmethod
+    def insert(self, entity: PresentationInfo):
+        return
+    @abstractmethod
+    def updete(self, entity: PresentationInfo):
+        return
+    @abstractmethod
+    def delete(self, id: str):
+        return
+    @abstractmethod
+    def find(self, id: str) -> PresentationInfo:
+        return
+    @abstractmethod
+    def find_all(self) -> list[PresentationInfo]:
         return
