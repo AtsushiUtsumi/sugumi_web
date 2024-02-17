@@ -192,5 +192,12 @@ def create():
         title = 'バリデーションを通過できませんでした'
         return render_template('screen.html', form=form, title=title)
 
+
+
+# パスパラメータでプロジェクト開く
+@app.route('/project/<int:id>')
+def func(id):
+    return '<h1>プロジェクト:{}のページ(スタブ)です</h1>'.format(id)
+
 if __name__=='__main__':
     app.run(debug=True)
