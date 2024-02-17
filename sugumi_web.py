@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from flask import Flask, render_template, request
 from injector import Injector, Module
-from sugumi_domain import PresentationInfoRepository, ProjectInfo, ProjectInfoRepository
+from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository
 from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository
 
 from sugumi_service import ProjectInfoService
@@ -66,15 +66,15 @@ def presentation():
         import json
         from sugumi_service import createPresentation
         print(json.loads(rows))
-        for i in json.loads(rows):
-            print(i[0])
+        repository = injector.get(PresentationInfoRepository)
+        repository.create_table()# テーブル作成
+        for i in json.loads(rows):# データを永続化
+            entity = PresentationInfo(i[0], i [1], i[2], i[3])
+            repository.insert(entity=entity)
             file_name = f'{i[2]}.html'
             #createPresentation(file_name, json.loads(rows))
             #createPresentation(f'{i[2]}Form.java', i[3])
             #createPresentation(f'{i[2]}Controller.java', i[3])
-        # 今日はここでテーブル作成したら寝る
-        repository = injector.get(PresentationInfoRepository)
-        repository.create_table()
         return render_template('presentation.html', form = request.form, rows = rows)
     form = {
         'src_root_path': os.environ['SRC_ROOT_PATH'],

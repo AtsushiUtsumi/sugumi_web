@@ -77,7 +77,7 @@ class ClassInfoRepository(metaclass=ABCMeta):
 
 
 class PresentationInfo:
-    def __init__(self, screen_name, url, class_name, action) -> None:
+    def __init__(self, screen_name: str, url: str, class_name: str, action: str) -> None:
         self.screen_name: str = screen_name
         self.url: str = url
         self.class_name: str = class_name

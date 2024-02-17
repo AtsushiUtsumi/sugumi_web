@@ -8,11 +8,15 @@
 </head>
 
 <body>
-    <h3>プレゼンテーション層作成</h3>
-    <p>HTMLのページが各テンプレートエンジンの種類に依存するのはなんか嫌やな...JSONでのやり取りで固定するか</p>
+    <h3>プレゼンテーション層作成(Spring特化)</h3>
+    <h3>以下のコマンド実行後に「コード生成」</h3>
+    <p>spring init -d=web --build=maven --package-name [パッケージ名] --name [プロジェクト名] --dependencies thymeleaf [プロジェクト名]</p>
+    <p><a target="_blank" rel="noopener noreferrer" href="http://localhost:8080">このリンク踏んで起動</a></p>
+    <h2 style="background-color: crimson;">抽象情報はDBなどに永続化すること。言語やフレームワークが変わった時にこの箇所は変更しないこと。</h2>
+    <h2 style="background-color: greenyellow;">具象情報はテンプレートファイル化すること。言語やフレームワークが変わった時にこれを差し替えれば動作すること。</h2>
     <form action="{{ url_for('presentation') }}" method="POST" novalidate="novalidate">
         HTMLルート<input style="width:30%;" type="text" name="src_root_path" value="{{ form.src_root_path }}" /><br>
-        Controllerルート<input style="width:30%;" type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
+        Form, Controllerルート<input style="width:30%;" type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
         <input type="submit" value="フレームワーク選択" />
         <select>
             <option value="spring">Spring</option>

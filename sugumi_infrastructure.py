@@ -9,6 +9,9 @@ def sqlite_execute(query: str):
     con = sqlite3.connect("sugumi.db")
     cur = con.cursor()
     cur.execute(query)
+    con.commit()
+    cur.close()
+    con.close()
 
 import psycopg2
 
@@ -213,8 +216,8 @@ CREATE TABLE IF NOT EXISTS PRESENTATION_INFO (
         sqlite_execute(create_table_query)
         return
     def insert(self, entity: PresentationInfo):
-        # TODO: 今はIDのみ登録している
-        insert_table_query = f'INSERT INTO PRESENTATION_INFO (id) VALUES ({entity.url})'
+        # TODO: 今は画面名のみ登録している
+        insert_table_query = f'INSERT INTO PRESENTATION_INFO (screen_name, url, class_name, action) VALUES (\'{entity.screen_name}\',\'{entity.url}\',\'{entity.class_name}\',\'{entity.action}\')'
         print(insert_table_query)
         sqlite_execute(insert_table_query)
         return
