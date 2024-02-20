@@ -12,6 +12,13 @@ def sqlite_execute(query: str):
     con.commit()
     cur.close()
     con.close()
+def sqlite_select(query: str):# 取得系クエリ
+    con = sqlite3.connect("sugumi.db")
+    cur = con.cursor()
+    result = cur.execute(query)
+    cur.close()
+    con.close()
+    return result
 
 import psycopg2
 
@@ -41,16 +48,34 @@ from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectI
 class SqliteProjectInfoRepository(ProjectInfoRepository):
     def create_table(self):
         print('テーブル(Sqlite)')
+        create_table_query = '''
+CREATE TABLE IF NOT EXISTS project_info (
+    id INT,
+    project_name TEXT,
+    output_path  TEXT,
+    group_id TEXT,
+    framework TEXT,
+    language TEXT
+)
+'''
         sqlite_execute(create_table_query)
         return
     def insert(self, entity: ProjectInfo):
+        self.create_table()
+        insert_table_query = f'INSERT INTO PROJECT_INFO (id, project_name, output_path, group_id, framework, language) VALUES (\'{entity.id}\',\'{entity.project_name}\',\'{entity.output_path}\',\'{entity.group_id}\',\'{entity.framework}\',\'{entity.language}\')'
+        print(insert_table_query)
+        sqlite_execute(insert_table_query)
         return
     def updete(self, entity: ProjectInfo):
         return
     def delete(self, id: int):
         return
     def find(self, id: int) -> ProjectInfo:
-        return
+        insert_table_query = f'SELECT * FROM project_info WHERE id={id}'
+        print(insert_table_query)
+        entity = sqlite_execute(insert_table_query)
+        print(entity)
+        return entity
     def find_all(self) -> list[ProjectInfo]:
         rs = list()
         rs.append(ProjectInfo(555))# とりあえず適当なIDのものを取得して返却

@@ -197,7 +197,15 @@ def create():
 # パスパラメータでプロジェクト開く
 @app.route('/project/<int:id>')
 def func(id):
-    return '<h1>プロジェクト:{}のページ(スタブ)です</h1>'.format(id)
+    repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
+    repository.create_table()
+    entity = ProjectInfo(id)
+    entity.language = 'java'
+    entity.framework = 'spring'
+    entity.project_name = 'vista'
+    repository.insert(entity=entity)
+    entity = repository.find(id=id)
+    return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(id, entity.language, entity.framework, entity.language, entity.language)
 
 if __name__=='__main__':
     app.run(debug=True)

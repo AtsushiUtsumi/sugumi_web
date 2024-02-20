@@ -12,13 +12,13 @@ class TableInfo:
         pass
 # 本日の目標はこれをDBに保存すること
 class ProjectInfo:
-    def __init__(self, id) -> None:
+    def __init__(self, id) -> None:# リモートリポジトリ
         self.id = id
-        self.project_name = id
-        self.output_path = id
-        self.group_id = id# Java特有だがここでいいのか
-        self.framework = id
-        self.language = id
+        self.project_name = 'プロジェクト名'
+        self.output_path = ''
+        self.group_id = ''# Java特有だがここでいいのか
+        self.framework = 'フレームワーク'
+        self.language = ''
         pass
 
 class ProjectInfoRepository(metaclass=ABCMeta):
