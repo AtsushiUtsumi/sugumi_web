@@ -13,12 +13,15 @@ def sqlite_execute(query: str):
     cur.close()
     con.close()
 def sqlite_select(query: str):# 取得系クエリ
+    rows = list()
     con = sqlite3.connect("sugumi.db")
     cur = con.cursor()
     result = cur.execute(query)
+    for i in result:
+        rows.append(i)
     cur.close()
     con.close()
-    return result
+    return rows
 
 import psycopg2
 
@@ -71,11 +74,16 @@ CREATE TABLE IF NOT EXISTS project_info (
     def delete(self, id: int):
         return
     def find(self, id: int) -> ProjectInfo:
-        insert_table_query = f'SELECT * FROM project_info WHERE id={id}'
-        print(insert_table_query)
-        entity = sqlite_execute(insert_table_query)
-        print(entity)
-        return entity
+        query = f'SELECT * FROM project_info WHERE id={id}'
+        rows = sqlite_select(query)
+        for row in rows:
+            entity = ProjectInfo(row[0])
+            entity.project_name = row[1]
+            entity.output_path = row[2]
+            entity.group_id = row[3]
+            entity.framework = row[4]
+            entity.language = row[5]
+            return entity
     def find_all(self) -> list[ProjectInfo]:
         rs = list()
         rs.append(ProjectInfo(555))# とりあえず適当なIDのものを取得して返却

@@ -4,7 +4,7 @@
 # モジュールを追加
 import os
 from pathlib import Path
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from injector import Injector, Module
 from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository
 from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository
@@ -196,16 +196,47 @@ def create():
 
 # パスパラメータでプロジェクト開く
 @app.route('/project/<int:id>')
-def func(id):
+def project(id):
+    repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
+    entity = ProjectInfo(id)
+    entity = repository.find(id=id)
+    print(entity.framework)
+    return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(entity.project_name, id, entity.language, entity.framework, entity.language)
+
+
+class ProjectForm:
+    def __init__(self) -> None:# TODO : リモートリポジトリを追加する
+        self.id = ''
+        self.project_name = 'プロジェクト名(仮)'
+        self.output_path = ''
+        self.group_id = ''
+        self.framework = 'フレームワーク(仮)'
+        self.language = 'java'
+        pass
+
+@app.route('/project/register', methods=["GET", "POST"])
+def project_register():
+    if request.method == "GET":
+        return render_template('project.html', form = ProjectForm())
+    form = request.form
+    print('選択された言語の拡張子は[' + request.form['language'] + ']です')
+    print('プロジェクト名は[' + request.form['project_name'] + ']です')
+    print('フレームワークは[' + request.form['framework'] + ']です')
+    # 登録処理
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     repository.create_table()
+    id = 0# TODO : 発番処理
+    while repository.find(id) != None:
+        id += 1
     entity = ProjectInfo(id)
-    entity.language = 'java'
-    entity.framework = 'spring'
-    entity.project_name = 'vista'
+    entity.language = form['language']
+    entity.framework = form['framework']
+    entity.project_name = form['project_name']
     repository.insert(entity=entity)
-    entity = repository.find(id=id)
-    return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(id, entity.language, entity.framework, entity.language, entity.language)
+    # 作成したプロジェクトを即開く
+    return redirect(f'/project/{id}')
 
 if __name__=='__main__':
     app.run(debug=True)
+
+# 帰ったら「新規プロジェクト登録」と「プロジェクトを開く」を実装したい。株価チェックも
