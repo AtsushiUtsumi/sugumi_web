@@ -89,9 +89,13 @@ def presentation():
                 ['ディーラー一覧', '/user/list', 'UserList',''],
                 ['ディーラー登録', '/user/register', 'UserRegister',''],
                 ['ディーラー詳細', '/user/detail/<id>', 'UserDetail',''],
-                ['プレゼンテーション層生成', '/presentation', 'Presentation','クラスファイル作成:createHtmlFormController, ER図作成:createEr'],
-                ['アプリケーション層生成', '/application', 'Application','クラスファイル作成:createService, ER図作成:createEr'],
-                ['インフラストラクチャ層生成', '/infrastructure', 'Infrastructure','クラスファイル作成:createRepository, ER図作成:createEr']
+                ['プロジェクト一覧', '/project', '',''],
+                ['プロジェクト新規作成', '/project/register', '',''],
+                ['プロジェクト詳細', '/project/<project_id>', '',''],
+                ['プレゼンテーション層生成', '/project/<project_id>/presentation', 'Presentation','クラスファイル作成:createHtmlFormController'],
+                ['アプリケーション層生成', '/project/<project_id>/application', 'Application','クラスファイル作成:createService'],
+                ['インフラストラクチャ層生成', '/project/<project_id>/infrastructure', 'Infrastructure','クラスファイル作成:createRepository, ER図作成:createEr'],
+                ['ドメイン層生成', '/project/<project_id>/domain', 'Domain','クラスファイル作成:createValue, ER図作成:createEr']
             ]""".replace("'", "\""))
 
 from dotenv import load_dotenv
@@ -193,8 +197,6 @@ def create():
         return render_template('screen.html', form=form, title=title)
 
 
-
-# パスパラメータでプロジェクト開く
 @app.route('/project/<int:id>')
 def project(id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
@@ -203,6 +205,36 @@ def project(id):
     print(entity.framework)
     return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(entity.project_name, id, entity.language, entity.framework, entity.language)
 
+# パスパラメータでプロジェクトの機能一覧を開く
+@app.route('/project/<int:id>/application')
+def project_service(id):
+    repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
+    entity = ProjectInfo(id)
+    entity = repository.find(id=id)
+    print(entity.project_name + 'の機能一覧を開きます')
+    if request.method == "POST":
+        rows = request.form["rows"]
+        src_root_path = Path(request.form["src_root_path"])
+        test_root_path = Path(request.form["test_root_path"])
+        import json
+        print(json.loads(rows))
+
+        # 受け取った内容を元にアプリケーション層作成
+        from sugumi_service import create_application
+        create_application(src_root_path=src_root_path, test_root_path=test_root_path)
+
+        # ページを返却
+        print(request.form)
+        return render_template('application.html',form=request.form, rows=rows)
+    form = {
+        'src_root_path': os.environ['SRC_ROOT_PATH'],
+        'test_root_path': os.environ['TEST_ROOT_PATH']
+    }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
+    return render_template('application.html', form = form, rows="""[
+                ['機能登録', 'User', 'register', '1'],
+                ['機能更新', 'User', 'update', '2'],
+                ['機能削除', 'User', 'delete', '3']
+            ]""".replace("'", "\""))
 
 class ProjectForm:
     def __init__(self) -> None:# TODO : リモートリポジトリを追加する
