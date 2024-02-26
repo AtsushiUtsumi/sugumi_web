@@ -268,6 +268,32 @@ def project_register():
     # 作成したプロジェクトを即開く
     return redirect(f'/project/{id}')
 
+@app.route('/project/<int:project_id>/domain', methods=["GET", "POST"])
+def domain(project_id):
+    if request.method == "POST":
+        rows = request.form["rows"]
+        src_root_path = Path(request.form["src_root_path"])
+        test_root_path = Path(request.form["test_root_path"])
+        import json
+        print(json.loads(rows))
+
+        # 受け取った内容を元にアプリケーション層作成
+        from sugumi_service import create_application
+        create_application(src_root_path=src_root_path, test_root_path=test_root_path)
+
+        # ページを返却
+        print(request.form)
+        return render_template('application.html',form=request.form, rows=rows)
+    form = {
+        'src_root_path': os.environ['SRC_ROOT_PATH'],
+        'test_root_path': os.environ['TEST_ROOT_PATH']
+    }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
+    return render_template('application.html', form = form, rows="""[
+                ['機能登録', 'User', 'register', '1'],
+                ['機能更新', 'User', 'update', '2'],
+                ['機能削除', 'User', 'delete', '3']
+            ]""".replace("'", "\""))
+
 if __name__=='__main__':
     app.run(debug=True)
 

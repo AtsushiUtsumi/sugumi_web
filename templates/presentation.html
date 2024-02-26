@@ -17,11 +17,12 @@
     <form action="{{ url_for('presentation') }}" method="POST" novalidate="novalidate">
         HTMLルート<input style="width:30%;" type="text" name="src_root_path" value="{{ form.src_root_path }}" /><br>
         Form, Controllerルート<input style="width:30%;" type="text" name="test_root_path" value="{{ form.test_root_path }}" /><br>
-        <input type="submit" value="フレームワーク選択" />
+        <h4>フレームワーク選択</h4>
         <select>
             <option value="spring">Spring</option>
             <option value="flask">Flask</option>
         </select><br>
+        <input type="submit" value="コード生成" />
         <input style="width:70%;" id="rows" type="text" name="rows" value="{{ rows }}" />
     </form>
 
