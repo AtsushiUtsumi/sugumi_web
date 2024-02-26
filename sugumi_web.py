@@ -268,6 +268,7 @@ def project_register():
     # 作成したプロジェクトを即開く
     return redirect(f'/project/{id}')
 
+# ドメイン層作成
 @app.route('/project/<int:project_id>/domain', methods=["GET", "POST"])
 def domain(project_id):
     if request.method == "POST":
@@ -288,10 +289,10 @@ def domain(project_id):
         'src_root_path': os.environ['SRC_ROOT_PATH'],
         'test_root_path': os.environ['TEST_ROOT_PATH']
     }# こんなふうにformを辞書で作成してもいいしオブジェクトで渡してもいい。これは便利!
-    return render_template('application.html', form = form, rows="""[
-                ['機能登録', 'User', 'register', '1'],
-                ['機能更新', 'User', 'update', '2'],
-                ['機能削除', 'User', 'delete', '3']
+    return render_template('domain.html', form = form, rows="""[
+                ['プロジェクト情報', 'ProjectInto', 'register', '1'],
+                ['テーブル情報', 'User', 'update', '2'],
+                ['画面情報', '', 'delete', '3']
             ]""".replace("'", "\""))
 
 if __name__=='__main__':
