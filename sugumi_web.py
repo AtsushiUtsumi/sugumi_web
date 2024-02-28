@@ -202,8 +202,9 @@ def project(id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     entity = ProjectInfo(id)
     entity = repository.find(id=id)
-    print(entity.framework)
-    return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(entity.project_name, id, entity.language, entity.framework, entity.language)
+    print(entity.project_name + 'プロジェクトを開きます')
+    return render_template('project.html', entity=entity)
+    return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(entity.project_name, entity.id, entity.language, entity.framework)
 
 # パスパラメータでプロジェクトの機能一覧を開く
 @app.route('/project/<int:id>/application')
@@ -249,7 +250,7 @@ class ProjectForm:
 @app.route('/project/register', methods=["GET", "POST"])
 def project_register():
     if request.method == "GET":
-        return render_template('project.html', form = ProjectForm())
+        return render_template('project-register.html', form = ProjectForm())
     form = request.form
     print('選択された言語の拡張子は[' + request.form['language'] + ']です')
     print('プロジェクト名は[' + request.form['project_name'] + ']です')

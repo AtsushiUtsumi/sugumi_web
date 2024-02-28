@@ -1,35 +1,11 @@
 {% extends "common.html" %}
-{% block title %}新規プロジェクト{% endblock %}
+{% block title %}{{ entity.project_name }}{% endblock %}
 {% block body %}
-<form action="{{ url_for('project_register') }}" method="POST" novalidate="novalidate">
-    <h2>プロジェクト情報を入力する</h2>
-    <table>
-        <tbody>
-            <tr>
-                <th>プロジェクト名</th>
-                <td>
-                    <input type="text" name="project_name" value="{{ form.project_name }}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>言語</th>
-                <td>
-                    <select name="language">
-                        <option value="py" {% if form.language == 'py' %}selected{% endif %}>Python</option>
-                        <option value="java" {% if form.language == 'java' %}selected{% endif %}>Java</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th>フレームワーク</th>
-                <td>
-                    <input type="text" name="framework" value="{{ form.framework }}" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <input type="submit" value="プロジェクト作成"><br>
-</form>
-<br>
+<h4>{{ entity.project_name }}</h4>
+<ul>
+    <li><a href="/project/{{ entity.id }}/domain">ドメイン層</a></li>
+    <li><a href="/project/{{ entity.id }}/presentation">プレゼンテーション層</a></li>
+    <li><a href="/project/{{ entity.id }}/application">アプリケーション層</a></li>
+    <li><a href="/project/{{ entity.id }}/infrastructure">インフラストラクチャ層</a></li>
+</ul>
 {% endblock %}
