@@ -6,11 +6,6 @@
 
 # conding: utf-8
 from abc import ABCMeta, abstractmethod
-
-class TableInfo:
-    def __init__(self) -> None:
-        pass
-# 本日の目標はこれをDBに保存すること
 class ProjectInfo:
     def __init__(self, id) -> None:# リモートリポジトリ
         self.id = id
@@ -40,7 +35,38 @@ class ProjectInfoRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_all(self) -> list[ProjectInfo]:
         return
-    
+class TableInfo:
+    def __init__(self, project_id, table_name) -> None:# リモートリポジトリ
+        self.project_id = project_id
+        self.table_name = table_name
+        self.columns_info = ''
+        pass
+
+class TableInfoRepository(metaclass=ABCMeta):
+    @abstractmethod
+    def create_table(self):
+        return
+    @abstractmethod
+    def insert(self, entity: TableInfo):
+        return
+    @abstractmethod
+    def updete(self, entity: TableInfo):
+        return
+    @abstractmethod
+    def delete(self, table_name):
+        return
+    @abstractmethod
+    def find(self, table_name: str) -> TableInfo:
+        return
+    @abstractmethod
+    def find_all(self) -> list[TableInfo]:
+        return
+    @abstractmethod
+    def delete_by_project_id(self, project_id: str) -> list[TableInfo]:
+        return
+    @abstractmethod
+    def find_by_project_id(self, project_id: str) -> list[TableInfo]:
+        return
 
 
 class ClassInfo:

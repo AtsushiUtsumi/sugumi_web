@@ -2,12 +2,13 @@
 # メソッド数が少ないので1モジュールで済ませている
 
 # モジュールを追加
+import json
 import os
 from pathlib import Path
 from flask import Flask, redirect, render_template, request
 from injector import Injector, Module
-from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository
-from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository
+from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
+from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, PostgresqlTableInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository, SqliteTableInfoRepository
 
 from sugumi_service import ProjectInfoService
 
@@ -19,11 +20,14 @@ class SqliteDiModule(Module):
     def configure(self, binder):
         binder.bind(ProjectInfoRepository, to=SqliteProjectInfoRepository)
         binder.bind(PresentationInfoRepository, to=SqlitePresentationInfoRepository)
+        binder.bind(TableInfoRepository, to=SqliteTableInfoRepository)
 
 class PostgresqlDiModule(Module):
     def configure(self, binder):
         binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
         binder.bind(PresentationInfoRepository, to=PostgresqlPresentationInfoRepository)
+        binder.bind(TableInfoRepository, to=PostgresqlTableInfoRepository)
+        
 
 injector = Injector([SqliteDiModule()])
 # injector = Injector([PostgresqlDiModule()])
@@ -31,9 +35,9 @@ injector = Injector([SqliteDiModule()])
 @app.route('/')
 def menu():
     projectInfoService = injector.get(ProjectInfoRepository)# TODO: ここ名前を変更が必要では?
-    print(projectInfoService)
+    # print(projectInfoService)
     rs = projectInfoService.find_all()
-    print(rs[0].id)
+    # print(rs[0].id)
     projectInfoService.create_table()
     projectInfoService.insert(ProjectInfo(1234))
     return render_template('menu.html')
@@ -42,11 +46,11 @@ def menu():
 def env():
     if request.method == "POST":
         rows = request.form["rows"]
-        print(rows)
+        # print(rows)
         import json
         from sugumi_service import createInfrastructure
         for i in json.loads(rows):
-            print(i[0])
+            # print(i[0])
             file_name = f'{i[1]}Repository.java'
             createInfrastructure(file_name, json.loads(rows))
         return render_template('env.html', rows=rows)
@@ -65,7 +69,7 @@ def presentation():
         rows = request.form["rows"]
         import json
         from sugumi_service import createPresentation
-        print(json.loads(rows))
+        # print(json.loads(rows))
         repository = injector.get(PresentationInfoRepository)
         repository.create_table()# テーブル作成
         for i in json.loads(rows):# データを永続化
@@ -108,14 +112,14 @@ def  application():
         src_root_path = Path(request.form["src_root_path"])
         test_root_path = Path(request.form["test_root_path"])
         import json
-        print(json.loads(rows))
+        # print(json.loads(rows))
 
         # 受け取った内容を元にアプリケーション層作成
         from sugumi_service import create_application
         create_application(src_root_path=src_root_path, test_root_path=test_root_path)
 
         # ページを返却
-        print(request.form)
+        # print(request.form)
         return render_template('application.html',form=request.form, rows=rows)
     form = {
         'src_root_path': os.environ['SRC_ROOT_PATH'],
@@ -131,11 +135,11 @@ def  application():
 def infrastructure():
     if request.method == "POST":
         rows = request.form["rows"]
-        print(rows)
+        # print(rows)
         import json
         from sugumi_service import createInfrastructure
         for i in json.loads(rows):
-            print(i[0])
+            # print(i[0])
             file_name = f'{i[1]}Repository.java'
             createInfrastructure(file_name, json.loads(rows))
         return render_template('infrastructure.html', rows=rows)
@@ -202,7 +206,7 @@ def project(id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     entity = ProjectInfo(id)
     entity = repository.find(id=id)
-    print(entity.project_name + 'プロジェクトを開きます')
+    # print(entity.project_name + 'プロジェクトを開きます')
     return render_template('project.html', entity=entity)
     return '<h1>プロジェクト:{}のページ(スタブ)です</h1><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3><br><h3>{}</h3>'.format(entity.project_name, entity.id, entity.language, entity.framework)
 
@@ -212,20 +216,20 @@ def project_service(id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     entity = ProjectInfo(id)
     entity = repository.find(id=id)
-    print(entity.project_name + 'の機能一覧を開きます')
+    # print(entity.project_name + 'の機能一覧を開きます')
     if request.method == "POST":
         rows = request.form["rows"]
         src_root_path = Path(request.form["src_root_path"])
         test_root_path = Path(request.form["test_root_path"])
         import json
-        print(json.loads(rows))
+        # print(json.loads(rows))
 
         # 受け取った内容を元にアプリケーション層作成
         from sugumi_service import create_application
         create_application(src_root_path=src_root_path, test_root_path=test_root_path)
 
         # ページを返却
-        print(request.form)
+        # print(request.form)
         return render_template('application.html',form=request.form, rows=rows)
     form = {
         'src_root_path': os.environ['SRC_ROOT_PATH'],
@@ -252,9 +256,9 @@ def project_register():
     if request.method == "GET":
         return render_template('project-register.html', form = ProjectForm())
     form = request.form
-    print('選択された言語の拡張子は[' + request.form['language'] + ']です')
-    print('プロジェクト名は[' + request.form['project_name'] + ']です')
-    print('フレームワークは[' + request.form['framework'] + ']です')
+    # print('選択された言語の拡張子は[' + request.form['language'] + ']です')
+    # print('プロジェクト名は[' + request.form['project_name'] + ']です')
+    # print('フレームワークは[' + request.form['framework'] + ']です')
     # 登録処理
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     repository.create_table()
@@ -277,14 +281,14 @@ def domain(project_id):
         src_root_path = Path(request.form["src_root_path"])
         test_root_path = Path(request.form["test_root_path"])
         import json
-        print(json.loads(rows))
+        # print(json.loads(rows))
 
         # 受け取った内容を元にアプリケーション層作成
         from sugumi_service import create_application
         create_application(src_root_path=src_root_path, test_root_path=test_root_path)
 
         # ページを返却
-        print(request.form)
+        # print(request.form)
         return render_template('application.html',form=request.form, rows=rows)
     form = {
         'src_root_path': os.environ['SRC_ROOT_PATH'],
@@ -296,7 +300,59 @@ def domain(project_id):
                 ['画面情報', '', 'delete', '3']
             ]""".replace("'", "\""))
 
+# プロジェクト個別のインフラストラクチャ層を開く
+@app.route('/project/<int:project_id>/infrastructure', methods=["GET", "POST"])
+def project_infrastructure(project_id: int):
+    if request.method == "POST":
+        rows = request.form["rows"]
+        # print(rows)
+        import json
+        from sugumi_service import createInfrastructure
+        for i in json.loads(rows):
+            # print(i[0])
+            file_name = f'{i[1]}Repository.java'
+            createInfrastructure(file_name, json.loads(rows))
+        return render_template('infrastructure.html', rows=rows)
+    return render_template('infrastructure.html', rows="""[
+                ['infrastructure', 'infrastructure', 'Infrastructure', 'Integer:id INT(3), String:type_name VARCHAR(50), String:table_name VARCHAR(50)'],
+                ['presentation', 'presentation', 'Presentation', 'Integer:id INT(3), String:screen_name VARCHAR(50)'],
+                ['application', 'application', 'Application', 'Integer:id INT(3), String:function_name VARCHAR(50)']
+            ]""".replace("'", "\""))
+
+
+# ここからがマスタ
+@app.route('/project/<int:project_id>/screen', methods=["GET", "POST"])
+def project_screen(project_id: int):
+    template_file = 'screen.html'
+    if request.method == "POST":
+        rows = request.form["rows"]
+        return render_template(template_file, rows=rows)
+    return render_template(template_file, rows="""[
+                ['infrastructure', 'infrastructure', 'Infrastructure', 'Integer:id INT(3), String:type_name VARCHAR(50), String:table_name VARCHAR(50)'],
+                ['presentation', 'presentation', 'Presentation', 'Integer:id INT(3), String:screen_name VARCHAR(50)'],
+                ['application', 'application', 'Application', 'Integer:id INT(3), String:function_name VARCHAR(50)']
+            ]""".replace("'", "\""))
+
+
+@app.route('/project/<int:project_id>/database', methods=["GET", "POST"])
+def project_database(project_id: int):
+    template_file = 'database.html'
+    repository = injector.get(TableInfoRepository)
+    if request.method == "POST":
+        rows = request.form["rows"]
+        repository.delete_by_project_id(project_id)
+        for row in json.loads(rows):
+            entity = TableInfo(project_id, row[0])
+            entity.columns_info = row[1]
+            repository.insert(entity)#TODO: バルクインサートに修正する
+        return render_template(template_file, rows=rows, project_id=project_id)
+    entity_list = repository.find_all()# TODO: by_project_idに修正する
+    rows = list()
+    for entity in entity_list:
+        rows.append([entity.table_name, entity.columns_info])
+    return render_template(template_file, rows=str(rows).replace("'", "\""), project_id=project_id)
 if __name__=='__main__':
     app.run(debug=True)
 
 # 帰ったら「新規プロジェクト登録」と「プロジェクトを開く」を実装したい。株価チェックも
+# 画面とテーブルのマスタ
