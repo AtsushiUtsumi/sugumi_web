@@ -1,0 +1,12 @@
+{% extends "common.html" %}
+{% block title %}プロジェクト一覧{% endblock %}
+{% block body %}
+<h4>プロジェクト一覧</h4>
+<p>
+    <li><a href="{{ url_for('project_register') }}">新規プロジェクト作成</a></li>
+</p>
+<ul>
+    <li>HOGE</li>
+    <li>FUGA</li>
+</ul>
+{% endblock %}

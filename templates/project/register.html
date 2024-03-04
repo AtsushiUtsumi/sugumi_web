@@ -1,8 +1,9 @@
 {% extends "common.html" %}
-{% block title %}新規プロジェクト{% endblock %}
+{% block title %}新規プロジェクト作成{% endblock %}
 {% block body %}
 <form action="{{ url_for('project_register') }}" method="POST" novalidate="novalidate">
-    <h2>プロジェクト情報を入力する</h2>
+    <h2>新規プロジェクト作成</h2>
+    <h4>プロジェクト情報を入力する</h4>
     <table>
         <tbody>
             <tr>
@@ -23,7 +24,10 @@
             <tr>
                 <th>フレームワーク</th>
                 <td>
-                    <input type="text" name="framework" value="{{ form.framework }}" />
+                    <select name="framework">
+                        <option value="spring" {% if form.framework == 'spring' %}selected{% endif %}>Spring</option>
+                        <option value="flask" {% if form.framework == 'flask' %}selected{% endif %}>Flask</option>
+                    </select>
                 </td>
             </tr>
         </tbody>
