@@ -329,13 +329,36 @@ def project_screen(project_id: int):
     template_file = 'screen.html'
     if request.method == "POST":
         rows = request.form["rows"]
-        return render_template(template_file, rows=rows)
+        return render_template(template_file, rows=rows, project_id=project_id)
     return render_template(template_file, rows="""[
-                ['infrastructure', 'infrastructure', 'Infrastructure', 'Integer:id INT(3), String:type_name VARCHAR(50), String:table_name VARCHAR(50)'],
-                ['presentation', 'presentation', 'Presentation', 'Integer:id INT(3), String:screen_name VARCHAR(50)'],
-                ['application', 'application', 'Application', 'Integer:id INT(3), String:function_name VARCHAR(50)']
-            ]""".replace("'", "\""))
+                ['ログイン', '/login', 'Login',''],
+                ['メニュー', '/menu', 'Menu',''],
+                ['ユーザー一覧', '/user/list', 'UserList',''],
+                ['ユーザー登録', '/user/register', 'UserRegister',''],
+                ['ユーザー詳細', '/user/detail/<id>', 'UserDetail',''],
+                ['ディーラー一覧', '/user/list', 'UserList',''],
+                ['ディーラー登録', '/user/register', 'UserRegister',''],
+                ['ディーラー詳細', '/user/detail/<id>', 'UserDetail',''],
+                ['プロジェクト一覧', '/project', '',''],
+                ['プロジェクト新規作成', '/project/register', '',''],
+                ['プロジェクト詳細', '/project/<project_id>', '',''],
+                ['プレゼンテーション層生成', '/project/<project_id>/presentation', 'Presentation','クラスファイル作成:createHtmlFormController'],
+                ['アプリケーション層生成', '/project/<project_id>/application', 'Application','クラスファイル作成:createService'],
+                ['インフラストラクチャ層生成', '/project/<project_id>/infrastructure', 'Infrastructure','クラスファイル作成:createRepository, ER図作成:createEr'],
+                ['ドメイン層生成', '/project/<project_id>/domain', 'Domain','クラスファイル作成:createValue, ER図作成:createEr']
+            ]""".replace("'", "\""), project_id=project_id)
 
+@app.route('/project/<int:project_id>/screen/delete', methods=["POST"])
+def project_screen_delete(project_id: int):
+    template_file = 'screen.html'
+    rows = request.form["rows"]
+    return render_template(template_file, rows=rows, project_id=project_id)
+
+@app.route('/project/<int:project_id>/screen/export', methods=["POST"])
+def project_screen_export(project_id: int):
+    template_file = 'screen.html'
+    rows = request.form["rows"]
+    return render_template(template_file, rows=rows, project_id=project_id)
 
 @app.route('/project/<int:project_id>/database', methods=["GET", "POST"])
 def project_database(project_id: int):
