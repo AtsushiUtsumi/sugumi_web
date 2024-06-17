@@ -8,3 +8,7 @@ SUGUMIのWEB版
 ```
 git clone https://github.com/AtsushiUtsumi/sugumi_web.git
 ```
+
+## リンク
+[メモ](document/MEMO.md)  
+[TODOリスト](document/TODO.md)
