@@ -39,7 +39,7 @@ def menu():
     rs = projectInfoService.find_all()
     # print(rs[0].id)
     projectInfoService.create_table()
-    projectInfoService.insert(ProjectInfo(1234))
+    #projectInfoService.insert(ProjectInfo(1234))
     return render_template('menu.html')
 
 @app.route('/env', methods=["GET", "POST"])
@@ -252,7 +252,9 @@ class ProjectForm:
 
 @app.route('/project', methods=["GET", "POST"])
 def project():
-    return render_template('project/list.html', form = ProjectForm())
+    repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
+    rows = repository.find_all()
+    return render_template('project/list.html', form = ProjectForm(), rows=rows)
 
 @app.route('/project/register', methods=["GET", "POST"])
 def project_register():

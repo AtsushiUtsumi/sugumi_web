@@ -93,13 +93,18 @@ CREATE TABLE IF NOT EXISTS project_info (
             entity.language = row[5]
             return entity
     def find_all(self) -> list[ProjectInfo]:
-        rs = list()
-        rs.append(ProjectInfo(555))# とりあえず適当なIDのものを取得して返却
-        rs.append(ProjectInfo(777))# とりあえず適当なIDのものを取得して返却
-        print('実装通っている')
-        print(rs[0].id)
-        print(rs[1].id)
-        return rs
+        result = []
+        query = f'SELECT * FROM project_info'
+        rows = sqlite_select(query)
+        for row in rows:
+            entity = ProjectInfo(row[0])
+            entity.project_name = row[1]
+            entity.output_path = row[2]
+            entity.group_id = row[3]
+            entity.framework = row[4]
+            entity.language = row[5]
+            result.append(entity)
+        return result
 
 class PostgresqlProjectInfoRepository(ProjectInfoRepository):
     def create_table(self):
