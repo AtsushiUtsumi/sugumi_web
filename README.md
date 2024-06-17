@@ -10,5 +10,5 @@ git clone https://github.com/AtsushiUtsumi/sugumi_web.git
 ```
 
 ## リンク
-[メモ](document/MEMO.md)  
+[メモ](document/NOTE.md)  
 [TODOリスト](document/TODO.md)
