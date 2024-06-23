@@ -374,7 +374,7 @@ def project_database(project_id: int):
             entity.columns_info = row[1]
             repository.insert(entity)#TODO: バルクインサートに修正する
         return render_template(template_file, rows=rows, project_id=project_id)
-    entity_list = repository.find_all()# TODO: by_project_idに修正する
+    entity_list = repository.find_by_project_id(project_id)
     rows = list()
     for entity in entity_list:
         rows.append([entity.table_name, entity.columns_info])
