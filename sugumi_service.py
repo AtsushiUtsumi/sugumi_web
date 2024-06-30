@@ -144,7 +144,10 @@ class ColumnInfoService:
         print('DI完了')
     
     def create_search(self, project_id: int):
+        from xuanzhuan.layer.presentation.spring import PresentationSpring
+        PresentationSpring('E:\\Desktop', 'xxx')
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
         for column_info in column_info_list:
             print(column_info.table_name, column_info.column_name)
+            # 今はテーブル名とカラム名を出力するのみ
         return
