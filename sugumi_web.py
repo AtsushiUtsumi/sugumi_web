@@ -10,7 +10,7 @@ from injector import Injector, Module
 from sugumi_domain import ColumnInfo, ColumnInfoRepository, PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
 from sugumi_infrastructure import PostgresqlColumnInfoRepository, PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, PostgresqlTableInfoRepository, SqliteColumnInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository, SqliteTableInfoRepository
 
-from sugumi_service import ProjectInfoService
+from sugumi_service import ColumnInfoService, ProjectInfoService
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'# CSRFに必要かも
@@ -385,7 +385,7 @@ def project_database(project_id: int):
 @app.route('/project/<int:project_id>/column', methods=["GET", "POST"])
 def project_column(project_id: int):
     template_file = 'column.html'
-    repository = injector.get(ColumnInfoRepository)
+    repository: ColumnInfoRepository = injector.get(ColumnInfoRepository)
     # POSTなら処理が何であれDB更新
     if request.method == "POST":
         rows = request.form["rows"]
@@ -395,7 +395,10 @@ def project_column(project_id: int):
             repository.insert(entity)
         print(request.values.keys())
         if 'gencode' in request.values.keys():
-            print('ソースコード生成起動')
+            print('ソースコード生成開始')
+            columnInfoService = ColumnInfoService(repository=repository)
+            columnInfoService.create_search(project_id=project_id)
+            print('ソースコード生成終了')
         return render_template(template_file, rows=rows, project_id=project_id)
     # 以下初期表示
     entity_list = repository.find_by_project_id(project_id)

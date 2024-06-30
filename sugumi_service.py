@@ -7,7 +7,7 @@ from pathlib import Path
 
 from injector import Injector, Module, inject
 
-from sugumi_domain import ClassInfoRepository, ProjectInfo, ProjectInfoRepository
+from sugumi_domain import ClassInfoRepository, ColumnInfoRepository, ProjectInfo, ProjectInfoRepository
 from sugumi_infrastructure import PostgresqlProjectInfoRepository, SqliteProjectInfoRepository
 
 def createPresentation(file_name, content):
@@ -137,3 +137,14 @@ class ClassInfoService:
         # injector = Injector([PostgresqlDiModule()])# 「Postgresql」使いたければこっち
         self.projectInfoRepository = injector.get(ClassInfoRepository)# この代入はシングルトン
         print('DI完了')
+
+class ColumnInfoService:
+    def __init__(self, repository: ColumnInfoRepository) -> None:
+        self.repository = repository
+        print('DI完了')
+    
+    def create_search(self, project_id: int):
+        column_info_list = self.repository.find_by_project_id(project_id=project_id)
+        for column_info in column_info_list:
+            print(column_info.table_name, column_info.column_name)
+        return

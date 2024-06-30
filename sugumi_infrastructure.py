@@ -429,9 +429,7 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
         rs.append(ColumnInfo('','','','','',''))
-        print('実装通っている')
-        print(rs[0].id)
-        print(rs[1].id)
+        print('実装通っている(Sqlite)')
         return rs
 
 class PostgresqlColumnInfoRepository(ColumnInfoRepository):
@@ -464,5 +462,5 @@ class PostgresqlColumnInfoRepository(ColumnInfoRepository):
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
         rs.append(ColumnInfo('','','','','',''))
-        print('実装通っている')
+        print('実装通っている(Postgresql)')
         return rs
