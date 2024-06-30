@@ -7,8 +7,8 @@ import os
 from pathlib import Path
 from flask import Flask, redirect, render_template, request
 from injector import Injector, Module
-from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
-from sugumi_infrastructure import PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, PostgresqlTableInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository, SqliteTableInfoRepository
+from sugumi_domain import ColumnInfo, ColumnInfoRepository, PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
+from sugumi_infrastructure import PostgresqlColumnInfoRepository, PostgresqlPresentationInfoRepository, PostgresqlProjectInfoRepository, PostgresqlTableInfoRepository, SqliteColumnInfoRepository, SqlitePresentationInfoRepository, SqliteProjectInfoRepository, SqliteTableInfoRepository
 
 from sugumi_service import ProjectInfoService
 
@@ -21,13 +21,15 @@ class SqliteDiModule(Module):
         binder.bind(ProjectInfoRepository, to=SqliteProjectInfoRepository)
         binder.bind(PresentationInfoRepository, to=SqlitePresentationInfoRepository)
         binder.bind(TableInfoRepository, to=SqliteTableInfoRepository)
+        binder.bind(ColumnInfoRepository, to=SqliteColumnInfoRepository)
 
 class PostgresqlDiModule(Module):
     def configure(self, binder):
         binder.bind(ProjectInfoRepository, to=PostgresqlProjectInfoRepository)
         binder.bind(PresentationInfoRepository, to=PostgresqlPresentationInfoRepository)
         binder.bind(TableInfoRepository, to=PostgresqlTableInfoRepository)
-        
+        binder.bind(ColumnInfoRepository, to=PostgresqlColumnInfoRepository)
+
 
 injector = Injector([SqliteDiModule()])
 # injector = Injector([PostgresqlDiModule()])
@@ -379,6 +381,29 @@ def project_database(project_id: int):
     for entity in entity_list:
         rows.append([entity.table_name, entity.columns_info])
     return render_template(template_file, rows=str(rows).replace("'", "\""), project_id=project_id)
+
+@app.route('/project/<int:project_id>/column', methods=["GET", "POST"])
+def project_column(project_id: int):
+    template_file = 'column.html'
+    repository = injector.get(ColumnInfoRepository)
+    # POSTなら処理が何であれDB更新
+    if request.method == "POST":
+        rows = request.form["rows"]
+        repository.delete_by_project_id(project_id)
+        for row in json.loads(rows):
+            entity = ColumnInfo(project_id, row[1], row[2], row[3], row[4], row[5])
+            repository.insert(entity)
+        print(request.values.keys())
+        if 'gencode' in request.values.keys():
+            print('ソースコード生成起動')
+        return render_template(template_file, rows=rows, project_id=project_id)
+    # 以下初期表示
+    entity_list = repository.find_by_project_id(project_id)
+    rows = list()
+    for entity in entity_list:
+        rows.append([entity.project_id, entity.table_name, entity.column_name, entity.constraints, entity.class_name, entity.package_name])
+    return render_template(template_file, rows=str(rows).replace("'", "\""), project_id=project_id)
+
 if __name__=='__main__':
     app.run(debug=True)
 

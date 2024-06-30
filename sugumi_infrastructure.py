@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS sample_table (
 #postgresql_execute(create_table_query)
 
 # Repository実装
-from sugumi_domain import PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
+from sugumi_domain import ColumnInfo, ColumnInfoRepository, PresentationInfo, PresentationInfoRepository, ProjectInfo, ProjectInfoRepository, TableInfo, TableInfoRepository
 class SqliteProjectInfoRepository(ProjectInfoRepository):
     def create_table(self):
         print('テーブル(Sqlite)')
@@ -397,4 +397,72 @@ CREATE TABLE IF NOT EXISTS table_info (
         print('実装通っている')
         print(rs[0].id)
         print(rs[1].id)
+        return rs
+    
+
+class SqliteColumnInfoRepository(ColumnInfoRepository):
+    def create_table(self):
+        print('カラム情報作成(Sqlite)')
+        create_table_query = 'CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, constraints TEXT, class_name TEXT, package_name TEXT)'
+        sqlite_execute(create_table_query)
+        return
+    def insert(self, entity: ColumnInfo):
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, class_name, package_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.class_name}\',\'{entity.package_name}\')'
+        print(insert_table_query)
+        sqlite_execute(insert_table_query)
+        return
+    def updete(self, entity: ColumnInfo):
+        return
+    def delete(self, id: int):
+        return
+    def find(self, id: int) -> ColumnInfo:
+        return
+    def delete_by_project_id(self, project_id):
+        sqlite_execute(f'DELETE FROM column_info where project_id = {project_id}')
+    def find_by_project_id(self, project_id) -> list[ColumnInfo]:
+        rs = sqlite_select(f'SELECT * FROM column_info where project_id = {project_id}')
+        entity_list = list()
+        for i in rs:
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5])
+            entity_list.append(entity)
+        return entity_list
+    def find_all(self) -> list[ColumnInfo]:
+        rs = list()
+        rs.append(ColumnInfo('','','','','',''))
+        print('実装通っている')
+        print(rs[0].id)
+        print(rs[1].id)
+        return rs
+
+class PostgresqlColumnInfoRepository(ColumnInfoRepository):
+    def create_table(self):
+        print('カラム情報作成(Postgresql)')
+        create_table_query = 'CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name VARCHAR(255), column_name VARCHAR(255), constraints VARCHAR(255), class_name VARCHAR(255), package_name VARCHAR(255))'
+        print(create_table_query)
+        postgresql_execute(create_table_query)
+        return
+    def insert(self, entity: ColumnInfo):
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, class_name, package_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.class_name}\',\'{entity.package_name}\')'
+        print(insert_table_query)
+        postgresql_execute(insert_table_query)
+        return
+    def updete(self, entity: ColumnInfo):
+        return
+    def delete(self, id: int):
+        return
+    def find(self, id: int) -> ColumnInfo:
+        return
+    def delete_by_project_id(self, project_id):
+        postgresql_execute(f'DELETE FROM column_info where project_id = {project_id}')
+    def find_by_project_id(self, project_id) -> list[ColumnInfo]:
+        rs = postgresql_select(f'SELECT * FROM column_info where project_id = {project_id}')
+        entity_list = list()
+        for i in rs:
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5])
+            entity_list.append(entity)
+        return entity_list
+    def find_all(self) -> list[ColumnInfo]:
+        rs = list()
+        rs.append(ColumnInfo('','','','','',''))
+        print('実装通っている')
         return rs

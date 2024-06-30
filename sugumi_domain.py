@@ -125,3 +125,38 @@ class PresentationInfoRepository(metaclass=ABCMeta):# 抽象クラスにDBを連
     @abstractmethod
     def find_all(self) -> list[PresentationInfo]:
         return
+
+class ColumnInfo:
+    def __init__(self, project_id: int, table_name: str, column_name: str, constraints: str, class_name: str, package_name: str) -> None:
+        self.project_id = project_id
+        self.table_name = table_name
+        self.column_name = column_name
+        self.constraints = constraints
+        self.class_name = class_name
+        self.package_name = package_name
+
+class ColumnInfoRepository(metaclass=ABCMeta):
+    @abstractmethod
+    def create_table(self):
+        return
+    @abstractmethod
+    def insert(self, entity: ColumnInfo):
+        return
+    @abstractmethod
+    def updete(self, entity: ColumnInfo):
+        return
+    @abstractmethod
+    def delete(self, table_name):
+        return
+    @abstractmethod
+    def find(self, table_name: str) -> ColumnInfo:
+        return
+    @abstractmethod
+    def find_all(self) -> list[ColumnInfo]:
+        return
+    @abstractmethod
+    def delete_by_project_id(self, project_id: str):
+        return
+    @abstractmethod
+    def find_by_project_id(self, project_id: str) -> list[ColumnInfo]:
+        return
