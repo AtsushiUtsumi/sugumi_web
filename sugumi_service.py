@@ -145,9 +145,16 @@ class ColumnInfoService:
     
     def create_search(self, project_id: int):
         from xuanzhuan.layer.presentation.spring import PresentationSpring
-        PresentationSpring('E:\\Desktop', 'xxx')
+        spring: PresentationSpring = PresentationSpring('E:\\Desktop', 'xxx')# Springアプリケーション出力
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
+        table_list = []
         for column_info in column_info_list:
             print(column_info.table_name, column_info.column_name)
+            table = dict()
+            table["tableName"] = column_info.table_name
+            table["columnList"] = []
+            table_list.append(table)
             # 今はテーブル名とカラム名を出力するのみ
+        for table in table_list:
+            spring.add_table(table=table)
         return
