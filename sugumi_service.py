@@ -151,8 +151,9 @@ class ColumnInfoService:
         for column_info in column_info_list:
             print(column_info.table_name, column_info.column_name)
             table = dict()
+            table["name"] = column_info.table_name
             table["tableName"] = column_info.table_name
-            table["columnList"] = []
+            table["columnList"] = ['hoge']
             table_list.append(table)
             # 今はテーブル名とカラム名を出力するのみ
         for table in table_list:
