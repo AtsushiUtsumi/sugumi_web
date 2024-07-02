@@ -391,7 +391,7 @@ def project_column(project_id: int):
         rows = request.form["rows"]
         repository.delete_by_project_id(project_id)
         for row in json.loads(rows):
-            entity = ColumnInfo(project_id, row[1], row[2], row[3], row[4], row[5])
+            entity = ColumnInfo(project_id, row[1], row[2], row[3], row[4], row[5], row[6])
             repository.insert(entity)
         print(request.values.keys())
         if 'gencode' in request.values.keys():
@@ -404,7 +404,7 @@ def project_column(project_id: int):
     entity_list = repository.find_by_project_id(project_id)
     rows = list()
     for entity in entity_list:
-        rows.append([entity.project_id, entity.table_name, entity.column_name, entity.constraints, entity.class_name, entity.package_name])
+        rows.append([entity.project_id, entity.table_name, entity.column_name, entity.constraints, entity.package_name, entity.class_name, entity.variable_name])
     return render_template(template_file, rows=str(rows).replace("'", "\""), project_id=project_id)
 
 if __name__=='__main__':

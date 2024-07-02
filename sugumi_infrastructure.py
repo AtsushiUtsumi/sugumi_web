@@ -423,12 +423,12 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
         rs = sqlite_select(f'SELECT * FROM column_info where project_id = {project_id}')
         entity_list = list()
         for i in rs:
-            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5])
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6])
             entity_list.append(entity)
         return entity_list
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
-        rs.append(ColumnInfo('','','','','',''))
+        rs.append(ColumnInfo('','','','','','',''))
         print('実装通っている(Sqlite)')
         return rs
 
@@ -456,11 +456,11 @@ class PostgresqlColumnInfoRepository(ColumnInfoRepository):
         rs = postgresql_select(f'SELECT * FROM column_info where project_id = {project_id}')
         entity_list = list()
         for i in rs:
-            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5])
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6])
             entity_list.append(entity)
         return entity_list
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
-        rs.append(ColumnInfo('','','','','',''))
+        rs.append(ColumnInfo('','','','','','',''))
         print('実装通っている(Postgresql)')
         return rs
