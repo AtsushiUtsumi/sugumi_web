@@ -3,8 +3,9 @@
 import sqlite3
 conn = sqlite3.connect('sugumi.db')
 c = conn.cursor()
+print('テーブル一覧')
 for a in c.execute("select name from sqlite_master where type='table'"):
-    print(a)
+    print(a[0])
 c.execute("DROP TABLE IF EXISTS column_info")
 c.execute("CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, constraints TEXT, package_name TEXT, class_name TEXT, variable_name TEXT, PRIMARY KEY (project_id, table_name, column_name))")
 #c.execute("INSERT INTO column_info VALUES(1, 'テーブル名', 'カラム名', '制約', 'パッケージ名', 'クラス名', '変数名')")
