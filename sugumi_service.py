@@ -145,7 +145,7 @@ class ColumnInfoService:
     
     def create_search(self, project_id: int):
         from xuanzhuan.layer.presentation.spring import PresentationSpring
-        spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], 'xxx')# Springアプリケーション出力
+        spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], 'xxx', 'com.tu')# Springアプリケーション出力
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
         table_list = []
         for column_info in column_info_list:
