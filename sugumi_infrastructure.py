@@ -403,11 +403,11 @@ CREATE TABLE IF NOT EXISTS table_info (
 class SqliteColumnInfoRepository(ColumnInfoRepository):
     def create_table(self):
         print('カラム情報作成(Sqlite)')
-        create_table_query = 'CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, constraints TEXT, class_name TEXT, package_name TEXT)'
-        sqlite_execute(create_table_query)
+        # create_table_query = 'CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, constraints TEXT, class_name TEXT, package_name TEXT)'
+        # sqlite_execute(create_table_query)
         return
     def insert(self, entity: ColumnInfo):
-        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, class_name, package_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.class_name}\',\'{entity.package_name}\')'
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
         print(insert_table_query)
         sqlite_execute(insert_table_query)
         return
@@ -435,12 +435,11 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
 class PostgresqlColumnInfoRepository(ColumnInfoRepository):
     def create_table(self):
         print('カラム情報作成(Postgresql)')
-        create_table_query = 'CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name VARCHAR(255), column_name VARCHAR(255), constraints VARCHAR(255), class_name VARCHAR(255), package_name VARCHAR(255))'
-        print(create_table_query)
-        postgresql_execute(create_table_query)
+        # TODO: ここテーブル作成クエリ作り直す
+        # postgresql_execute(create_table_query)
         return
     def insert(self, entity: ColumnInfo):
-        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, class_name, package_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.class_name}\',\'{entity.package_name}\')'
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
         print(insert_table_query)
         postgresql_execute(insert_table_query)
         return

@@ -143,7 +143,7 @@ class ColumnInfoService:
         self.repository = repository
         print('DI完了')
     
-    def create_search(self, project_id: int):
+    def create_crud(self, project_id: int):
         from xuanzhuan.layer.presentation.spring import PresentationSpring
         spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], 'xxx', 'com.tu')# Springアプリケーション出力
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
@@ -153,7 +153,14 @@ class ColumnInfoService:
             table = dict()
             table["name"] = column_info.table_name
             table["tableName"] = column_info.table_name
-            table["columnList"] = ['hoge']
+            table["columnList"] = [
+                {
+                    "langType": "LocalDate",
+                    "langName": column_info.variable_name,
+                    "dbType": "Timestamp",
+                    "dbName": "REGISTER_DATE_FROM"
+                }
+            ]
             table_list.append(table)
             # 今はテーブル名とカラム名を出力するのみ
         for table in table_list:

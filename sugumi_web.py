@@ -397,7 +397,7 @@ def project_column(project_id: int):
         if 'gencode' in request.values.keys():
             print('ソースコード生成開始')
             columnInfoService = ColumnInfoService(repository=repository)
-            columnInfoService.create_search(project_id=project_id)
+            columnInfoService.create_crud(project_id=project_id)
             print('ソースコード生成終了')
         return render_template(template_file, rows=rows, project_id=project_id)
     # 以下初期表示
