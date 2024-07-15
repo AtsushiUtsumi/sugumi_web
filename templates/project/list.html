@@ -11,6 +11,7 @@ border: 1px #000000 solid;
 }
 </style>
 <table>
-    {% for row in rows %}<tr><td><a href="{{ url_for('project_detail', id=row.id) }}">{{row.id}}</a></td><td>{{row.id}}</td><td>{{row.project_name}}</td><td>{{row.framework}}</td><td>{{row.language}}</td></tr>{% endfor %}
+    <tr><td>ID</a></td><td>プロジェクト名</td><td>フレームワーク</td><td>言語</td></tr>
+    {% for row in rows %}<tr><td><a href="{{ url_for('project_detail', id=row.id) }}">{{row.id}}</a></td><td>{{row.project_name}}</td><td>{{row.framework}}</td><td>{{row.language}}</td></tr>{% endfor %}
 </table>
 {% endblock %}
