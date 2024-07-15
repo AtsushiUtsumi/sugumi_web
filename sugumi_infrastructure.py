@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS PRESENTATION_INFO (
         return
     def find(self, id: int) -> PresentationInfo:
         return
-    def delete_by_project_id(self, project_id) -> list[TableInfo]:
+    def delete_by_project_id(self, project_id):
         postgresql_execute(f'DELETE FROM table_info where project_id = {project_id}')
     def find_by_project_id(self, project_id) -> list[TableInfo]:
         rs = postgresql_select(f'SELECT * FROM table_info where project_id = {project_id}')
@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS table_info (project_id TEXT,
             entity = TableInfo(row[0])
             entity.columns_info = row[1]
             return entity
-    def delete_by_project_id(self, project_id) -> list[TableInfo]:
+    def delete_by_project_id(self, project_id):
         sqlite_execute(f'DELETE FROM table_info where project_id = {project_id}')
     def find_by_project_id(self, project_id) -> list[TableInfo]:
         rs = sqlite_select(f'SELECT * FROM table_info where project_id = {project_id}')

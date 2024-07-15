@@ -392,8 +392,8 @@ def project_column(project_id: int):
         repository.delete_by_project_id(project_id)
         for row in json.loads(rows):
             entity = ColumnInfo(project_id, row[1], row[2], row[3], row[4], row[5], row[6])
-            repository.insert(entity)
-        print(request.values.keys())
+            if entity.table_name != '' and entity.column_name != '':
+                repository.insert(entity) 
         if 'gencode' in request.values.keys():
             print('ソースコード生成開始')
             columnInfoService = ColumnInfoService(repository=repository)

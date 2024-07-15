@@ -62,7 +62,7 @@ class TableInfoRepository(metaclass=ABCMeta):
     def find_all(self) -> list[TableInfo]:
         return
     @abstractmethod
-    def delete_by_project_id(self, project_id: str) -> list[TableInfo]:
+    def delete_by_project_id(self, project_id: str):
         return
     @abstractmethod
     def find_by_project_id(self, project_id: str) -> list[TableInfo]:

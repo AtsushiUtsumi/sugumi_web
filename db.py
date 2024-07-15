@@ -14,9 +14,18 @@ c.execute("INSERT INTO column_info VALUES(1, 'user', 'name', '', 'user', 'user',
 c.execute("INSERT INTO column_info VALUES(1, 'user', 'age', '', 'user', 'user', 'age')")
 c.execute("INSERT INTO column_info VALUES(1, 'user', 'email', '', 'user', 'user', 'email')")
 
+c.execute("INSERT INTO column_info VALUES(1, 'call', 'ninniku', '', 'call', 'call', 'ninniku')")
+c.execute("INSERT INTO column_info VALUES(1, 'call', 'yasai', '', 'call', 'call', 'yasai')")
+c.execute("INSERT INTO column_info VALUES(1, 'call', 'abura', '', 'call', 'call', 'abura')")
+c.execute("INSERT INTO column_info VALUES(1, 'call', 'karame', '', 'call', 'call', 'karame')")
+
 c.execute("CREATE TABLE IF NOT EXISTS internationalization (id TEXT NOT NULL, ja TEXT NOT NULL, en TEXT NOT NULL, PRIMARY KEY (id))")
 c.execute("CREATE TABLE IF NOT EXISTS presentation_info (url TEXT, screen_name TEXT, class_name TEXT, action TEXT)")
+
+c.execute("DROP TABLE IF EXISTS project_info")
 c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id))")
+c.execute("INSERT INTO project_info VALUES(1, 'jiro', '', 'com.au', 'spring', 'java')")
+
 c.execute("CREATE TABLE IF NOT EXISTS table_info (table_id INT, table_name TEXT, project_id INT,  columns_info TEXT, PRIMARY KEY (table_id))")
 conn.commit()
 conn.close()

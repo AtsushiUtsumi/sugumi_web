@@ -144,8 +144,12 @@ class ColumnInfoService:
         print('DI完了')
     
     def create_crud(self, project_id: int):
+        from sugumi_injector import injector
+        pir: ProjectInfoRepository = injector.get(ProjectInfoRepository)
+        pi = pir.find(id=project_id)
+        print(pi)
         from xuanzhuan.layer.presentation.spring import PresentationSpring
-        spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], 'xxx', 'com.tu')# Springアプリケーション出力
+        spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], pi.project_name, pi.group_id)# Springアプリケーション出力
         # TODO: プロジェクト情報から取得するように変更する
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
         table_list = []
