@@ -146,21 +146,27 @@ class ColumnInfoService:
     def create_crud(self, project_id: int):
         from xuanzhuan.layer.presentation.spring import PresentationSpring
         spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], 'xxx', 'com.tu')# Springアプリケーション出力
+        # TODO: プロジェクト情報から取得するように変更する
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
         table_list = []
+        table_name_set = set()
         for column_info in column_info_list:
-            print(column_info.table_name, column_info.column_name)
+            table_name_set.add(column_info.table_name)
+        for table_name in table_name_set:
+            if table_name == '':
+                continue
             table = dict()
-            table["name"] = column_info.table_name
-            table["tableName"] = column_info.table_name
-            table["columnList"] = [
-                {
+            table["name"] = table_name
+            table["tableName"] = table_name
+            table["columnList"] = []
+            tmp = [c for c in column_info_list if c.table_name == table_name]# テーブル名毎にカラムリスト作成
+            for c in tmp:
+                table["columnList"].append({
                     "langType": "LocalDate",
-                    "langName": column_info.variable_name,
+                    "langName": c.variable_name,
                     "dbType": "Timestamp",
-                    "dbName": "REGISTER_DATE_FROM"
-                }
-            ]
+                    "dbName": c.column_name
+                })
             table_list.append(table)
             # 今はテーブル名とカラム名を出力するのみ
         for table in table_list:
