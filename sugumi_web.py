@@ -37,12 +37,11 @@ injector = Injector([SqliteDiModule()])
 @app.route('/')
 def menu():
     projectInfoService = injector.get(ProjectInfoRepository)# TODO: ここ名前を変更が必要では?
-    # print(projectInfoService)
-    rs = projectInfoService.find_all()
-    # print(rs[0].id)
+    project_info_list = projectInfoService.find_all()
     projectInfoService.create_table()
-    #projectInfoService.insert(ProjectInfo(1234))
-    return render_template('menu.html')
+    for project_info in project_info_list:
+        print(project_info.language)
+    return render_template('menu.html', project_info_list=project_info_list)
 
 @app.route('/env', methods=["GET", "POST"])
 def env():
@@ -203,20 +202,20 @@ def create():
         return render_template('screen.html', form=form, title=title)
 
 
-@app.route('/project/<int:id>')
-def project_detail(id):
+@app.route('/project/<int:project_id>')
+def project_detail(project_id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
-    entity = ProjectInfo(id)
-    entity = repository.find(id=id)
+    entity = ProjectInfo(project_id)
+    entity = repository.find(id=project_id)
     # print(entity.project_name + 'プロジェクトを開きます')
     return render_template('project/detail.html', entity=entity)
 
 # パスパラメータでプロジェクトの機能一覧を開く
-@app.route('/project/<int:id>/application')
-def project_service(id):
+@app.route('/project/<int:project_id>/application')
+def project_service(project_id):
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
-    entity = ProjectInfo(id)
-    entity = repository.find(id=id)
+    entity = ProjectInfo(project_id)
+    entity = repository.find(id=project_id)
     # print(entity.project_name + 'の機能一覧を開きます')
     if request.method == "POST":
         rows = request.form["rows"]
@@ -253,7 +252,7 @@ class ProjectForm:
         pass
 
 @app.route('/project', methods=["GET", "POST"])
-def project():
+def project_list():
     repository: ProjectInfoRepository = injector.get(ProjectInfoRepository)
     rows = repository.find_all()
     return render_template('project/list.html', form = ProjectForm(), rows=rows)

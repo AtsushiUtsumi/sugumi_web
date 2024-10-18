@@ -11,9 +11,32 @@
 <body>
     <h3>SUGUMI-WEB</h3>
     <p>
-        SUGUMI-WEBへようこそ!<br><a href="/project/1">自分自身</a>
+        SUGUMI-WEBへようこそ!<br>
     </p>
     <br>
+    <table border="1" style="border-collapse: collapse">
+        <tr>
+            <th></th>
+            <th>id</th>
+            <th>project_name</th>
+            <th>output_path</th>
+            <th>group_id</th>
+            <th>framework</th>
+            <th>language</th>
+        </tr>
+        {% for project_info in project_info_list %}
+        <tr>
+            <td><a href="{{ url_for('project_detail', project_id=project_info.id) }}">OPEN</a></td>
+            <td>{{project_info.id}}</td>
+            <td>{{project_info.project_name}}</td>
+            <td>{{project_info.output_path}}</td>
+            <td>{{project_info.group_id}}</td>
+            <td>{{project_info.framework}}</td>
+            <td>{{project_info.language}}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
     <p>
         WEB化するメリットは皆が使えること。逆に言えば皆が使える環境を作れないのなら、WEB化は不要。<br>
         ただGUIのほうがビジュアル面で受けが良いとも思う。<br>
