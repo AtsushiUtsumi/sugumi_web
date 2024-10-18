@@ -1,11 +1,6 @@
 {% extends "common.html" %}
 {% block title %}カラム管理{% endblock %}
 {% block body %}
-<h3>カラム管理</h3>
-
-{% with class_name = 'カラムクラス' %}
-{% include 'footer.html' %}
-{% endwith %}
 <form action="{{ url_for('project_column', project_id=project_id) }}" method="POST" novalidate="novalidate">
     <input type="submit" name="gencode" value="ソースコード生成" /><select>
         <option value="java">Java</option>
@@ -43,4 +38,7 @@
         ]
     });
 </script>
+{% with class_name = 'カラムクラス(これはinclude元でwithで定義した値が引き継がれているつまり引数をwithで渡すことが可能)' %}
+{% include 'footer.html' %}
+{% endwith %}
 {% endblock %}
