@@ -149,7 +149,8 @@ class ColumnInfoService:
         pi = pir.find(id=project_id)
         print(pi)
         from xuanzhuan.layer.presentation.spring import PresentationSpring
-        spring: PresentationSpring = PresentationSpring(os.environ['OUTPUT_ROOT_PATH'], pi.project_name, pi.group_id)# Springアプリケーション出力
+        from sugumi_setting import OUTPUT_ROOT_PATH
+        spring: PresentationSpring = PresentationSpring(OUTPUT_ROOT_PATH, pi.project_name, pi.group_id)# Springアプリケーション出力
         # TODO: プロジェクト情報から取得するように変更する
         column_info_list = self.repository.find_by_project_id(project_id=project_id)
         table_list = []
