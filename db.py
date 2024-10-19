@@ -25,6 +25,18 @@ c.execute("CREATE TABLE IF NOT EXISTS presentation_info (url TEXT, screen_name T
 c.execute("DROP TABLE IF EXISTS project_info")
 c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id))")
 c.execute("INSERT INTO project_info VALUES(1, 'jiro', '', 'com.au', 'spring', 'java')")
+c.execute("INSERT INTO project_info VALUES(2, 'test', '', 'com.au', 'spring', 'java')")
+
+import xuanzhuan as xz
+import_data_file = open('import.csv','r')
+for line in import_data_file.readlines():
+    tmp = [i.strip() for i in line.split(',')]
+    class_name = xz.CaseConverter(tmp[0].lower()).to_upper_camel_case()
+    var_name = xz.CaseConverter(tmp[1].lower()).to_lower_camel_case()
+    query = "INSERT INTO column_info VALUES(2, '" + str.join("', '", tmp) + "', '', '" + class_name +  "', '" + var_name +  "')"
+    print(query)
+    c.execute(query)
+
 
 c.execute("CREATE TABLE IF NOT EXISTS table_info (table_id INT, table_name TEXT, project_id INT,  columns_info TEXT, PRIMARY KEY (table_id))")
 conn.commit()
