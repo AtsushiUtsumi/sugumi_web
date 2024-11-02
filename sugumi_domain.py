@@ -127,10 +127,11 @@ class PresentationInfoRepository(metaclass=ABCMeta):# 抽象クラスにDBを連
         return
 
 class ColumnInfo:
-    def __init__(self, project_id: int, table_name: str, column_name: str, constraints: str, package_name: str, class_name: str, variable_name: str) -> None:
+    def __init__(self, project_id: int, table_name: str, column_name: str, is_key: str, constraints: str, package_name: str, class_name: str, variable_name: str) -> None:
         self.project_id = project_id
         self.table_name = table_name
         self.column_name = column_name
+        self.is_key = is_key
         self.constraints = constraints
         self.package_name = package_name
         self.class_name = class_name

@@ -1,4 +1,4 @@
-hoge,hoge_id,INT
-hoge,hoge_name,INT
-fuga,fuga_id,INT
-fuga,fuga_name,INT
+hoge,hoge_id,1,INT
+hoge,hoge_name,1,INT
+fuga,fuga_id,1,INT
+fuga,fuga_name,1,INT

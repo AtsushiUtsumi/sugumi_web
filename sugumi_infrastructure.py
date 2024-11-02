@@ -407,7 +407,7 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
         # sqlite_execute(create_table_query)
         return
     def insert(self, entity: ColumnInfo):
-        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, is_key,constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
         print(insert_table_query)
         sqlite_execute(insert_table_query)
         return
@@ -423,12 +423,12 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
         rs = sqlite_select(f'SELECT * FROM column_info where project_id = {project_id}')
         entity_list = list()
         for i in rs:
-            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6])
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
             entity_list.append(entity)
         return entity_list
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
-        rs.append(ColumnInfo('','','','','','',''))
+        rs.append(ColumnInfo('','','','','','','',''))
         print('実装通っている(Sqlite)')
         return rs
 
@@ -439,7 +439,7 @@ class PostgresqlColumnInfoRepository(ColumnInfoRepository):
         # postgresql_execute(create_table_query)
         return
     def insert(self, entity: ColumnInfo):
-        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, is_key, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
         print(insert_table_query)
         postgresql_execute(insert_table_query)
         return
@@ -455,11 +455,11 @@ class PostgresqlColumnInfoRepository(ColumnInfoRepository):
         rs = postgresql_select(f'SELECT * FROM column_info where project_id = {project_id}')
         entity_list = list()
         for i in rs:
-            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6])
+            entity = ColumnInfo(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
             entity_list.append(entity)
         return entity_list
     def find_all(self) -> list[ColumnInfo]:
         rs = list()
-        rs.append(ColumnInfo('','','','','','',''))
+        rs.append(ColumnInfo('','','','','','','',''))
         print('実装通っている(Postgresql)')
         return rs
