@@ -6,8 +6,18 @@ c = conn.cursor()
 print('テーブル一覧')
 for a in c.execute("select name from sqlite_master where type='table'"):
     print(a[0])
+c.execute("PRAGMA foreign_keys= true")
+c.execute("PRAGMA foreign_keys")
+
+# プロジェクト情報テーブル作成
 c.execute("DROP TABLE IF EXISTS column_info")
-c.execute("CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, is_key INT, constraints TEXT, package_name TEXT, class_name TEXT, variable_name TEXT, PRIMARY KEY (project_id, table_name, column_name))")
+c.execute("DROP TABLE IF EXISTS project_info")
+c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id))")
+c.execute("INSERT INTO project_info VALUES(1, 'jiro', '', 'com.au.jiro', 'spring', 'java')")
+c.execute("INSERT INTO project_info VALUES(2, 'test', '', 'com.au', 'spring', 'java')")
+
+
+c.execute("CREATE TABLE IF NOT EXISTS column_info (project_id INT, table_name TEXT, column_name TEXT, is_key INT, constraints TEXT, package_name TEXT, class_name TEXT, variable_name TEXT, PRIMARY KEY (project_id, table_name, column_name), foreign key (project_id) references project_info(id))")
 #c.execute("INSERT INTO column_info VALUES(1, 'テーブル名', 'カラム名', '制約', 'パッケージ名', 'クラス名', '変数名')")
 c.execute("INSERT INTO column_info VALUES(1, 'user', 'id', '1', '', 'user', 'user', 'id')")
 c.execute("INSERT INTO column_info VALUES(1, 'user', 'name', '', '', 'user', 'user', 'name')")
@@ -21,11 +31,6 @@ c.execute("INSERT INTO column_info VALUES(1, 'call', 'karame', '', '', 'call', '
 
 c.execute("CREATE TABLE IF NOT EXISTS internationalization (id TEXT NOT NULL, ja TEXT NOT NULL, en TEXT NOT NULL, PRIMARY KEY (id))")
 c.execute("CREATE TABLE IF NOT EXISTS presentation_info (url TEXT, screen_name TEXT, class_name TEXT, action TEXT)")
-
-c.execute("DROP TABLE IF EXISTS project_info")
-c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id))")
-c.execute("INSERT INTO project_info VALUES(1, 'jiro', '', 'com.au', 'spring', 'java')")
-c.execute("INSERT INTO project_info VALUES(2, 'test', '', 'com.au', 'spring', 'java')")
 
 import xuanzhuan as xz
 import_data_file = open('import.csv','r')
