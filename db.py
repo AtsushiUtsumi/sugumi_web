@@ -12,7 +12,7 @@ c.execute("PRAGMA foreign_keys")
 # プロジェクト情報テーブル作成
 c.execute("DROP TABLE IF EXISTS column_info")
 c.execute("DROP TABLE IF EXISTS project_info")
-c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id))")
+c.execute("CREATE TABLE IF NOT EXISTS project_info (id INT, project_name TEXT, output_path TEXT, group_id TEXT, framework TEXT, language TEXT, PRIMARY KEY (id), CHECK(id > 0))")
 c.execute("INSERT INTO project_info VALUES(1, 'jiro', '', 'com.au.jiro', 'spring', 'java')")
 c.execute("INSERT INTO project_info VALUES(2, 'test', '', 'com.au', 'spring', 'java')")
 
