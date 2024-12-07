@@ -407,7 +407,7 @@ class SqliteColumnInfoRepository(ColumnInfoRepository):
         # sqlite_execute(create_table_query)
         return
     def insert(self, entity: ColumnInfo):
-        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, is_key,　constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.is_key}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
+        insert_table_query = f'INSERT INTO COLUMN_INFO (project_id, table_name, column_name, is_key, constraints, package_name, class_name, variable_name) VALUES (\'{entity.project_id}\',\'{entity.table_name}\',\'{entity.column_name}\',\'{entity.is_key}\',\'{entity.constraints}\',\'{entity.package_name}\',\'{entity.class_name}\',\'{entity.variable_name}\')'
         print(insert_table_query)
         sqlite_execute(insert_table_query)
         return
