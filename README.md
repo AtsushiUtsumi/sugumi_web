@@ -7,6 +7,8 @@ SUGUMIのWEB版
 コマンドプロンプトで以下のコマンドを実行する
 ```
 git clone https://github.com/AtsushiUtsumi/sugumi_web.git
+pip install pytest,python-dotenv,injector,psycopg2-binary,flask_wtf
+sudo apt install libpq-dev
 ```
 
 ## リンク
