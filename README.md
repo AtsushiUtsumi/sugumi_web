@@ -31,3 +31,18 @@ sudo apt install libpq-dev
 
 ## chatGPTで生成した画像
 <img src="document/image/プログラマ.png" width="400">
+
+## injectorについて
+
+### Injector
+依存注入を行う。  
+
+### Binder
+ここで抽象クラスと具象クラスの紐付けを行う。  
+
+### Provider
+依存を提供する主体。  
+
+### Module
+Binderで紐付けてModuleでBinderを束ねる。  
+Moduleは環境毎に変えるのかも(本番環境、テスト環境みたいな)  
